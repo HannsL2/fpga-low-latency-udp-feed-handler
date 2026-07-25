@@ -1,0 +1,28 @@
+# Vivado and XSim generated data
+.Xil/
+*.jou
+*.log
+*.str
+*.pb
+*.wdb
+*.vcd
+*.vpd
+*.fsdb
+*.cache/
+*.hw/
+*.ip_user_files/
+*.runs/
+*.sim/
+*.srcs/
+xsim.dir/
+work/
+
+# Editor and operating-system files
+.vscode/
+.DS_Store
+Thumbs.db
+*.swp
+
+# Local scratch output
+build/
+tmp/
