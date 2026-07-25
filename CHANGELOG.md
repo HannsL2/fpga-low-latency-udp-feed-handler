@@ -6,3 +6,5 @@
 - Defined the streaming interface, packet format and receive-path architecture.
 - Added the shared SystemVerilog package and top-level interface.
 - Added the first directed Ethernet/IPv4/UDP packet test.
+- Added handshake-aware packet indexing and Ethernet field extraction.
+- Added directed checks for stalls, packet boundaries and truncated headers.

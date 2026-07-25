@@ -79,6 +79,6 @@ The representative implementation target is the Artix-7 `xc7a35tcpg236-1` with a
 
 ## Current status
 
-The stream interface, packet format and XSim bring-up test are in place. Packet-processing RTL and the verification environment are under active implementation. The current source compiles and elaborates cleanly with XSim 2026.1.
+The packet controller and Ethernet parser are implemented and pass directed XSim tests covering field extraction, input stalls, packet boundaries and truncated headers. IPv4 and UDP processing are under active implementation.
 
-See [the design specification](docs/project_specification.md), [architecture notes](docs/architecture.md) and [protocol reference](docs/protocol.md) for the detailed interface and byte layout.
+See [the design specification](docs/project_specification.md), [architecture notes](docs/architecture.md), [Ethernet parser notes](docs/ethernet_parser.md) and [protocol reference](docs/protocol.md) for the detailed interface and byte layout.
