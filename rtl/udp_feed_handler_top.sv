@@ -39,10 +39,50 @@ module udp_feed_handler_top #(
     output logic [31:0] rejected_packet_count
 );
 
-    // The interface is defined ahead of the receive-path implementation.
-    // Result outputs remain inactive until their corresponding blocks are added.
+    logic        input_transfer;
+    logic        packet_start;
+    logic        packet_end;
+    logic        packet_active;
+    logic [15:0] packet_byte_index;
+
+    logic        ethernet_header_valid;
+    logic        short_ethernet_frame;
+    logic [47:0] destination_mac;
+    logic [47:0] source_mac;
+    logic [15:0] ether_type;
+
+    stream_packet_controller packet_controller (
+        .clk,
+        .reset,
+        .s_valid,
+        .s_ready,
+        .s_last,
+        .transfer(input_transfer),
+        .packet_start,
+        .packet_end,
+        .packet_active,
+        .byte_index(packet_byte_index)
+    );
+
+    ethernet_parser ethernet_parser_inst (
+        .clk,
+        .reset,
+        .s_data,
+        .transfer(input_transfer),
+        .packet_start,
+        .packet_end,
+        .byte_index(packet_byte_index),
+        .header_valid(ethernet_header_valid),
+        .short_frame(short_ethernet_frame),
+        .destination_mac,
+        .source_mac,
+        .ether_type
+    );
+
+    // Later receive-path blocks consume the parsed Ethernet fields. Their
+    // interface outputs remain inactive until those blocks are connected.
     always_comb begin
-        s_ready = 1'b1;
+        s_ready = !reset;
 
         m_payload_data = 8'h00;
         m_payload_valid = 1'b0;
