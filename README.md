@@ -79,6 +79,6 @@ The representative implementation target is the Artix-7 `xc7a35tcpg236-1` with a
 
 ## Current status
 
-The packet controller and Ethernet parser are implemented and pass directed XSim tests covering field extraction, input stalls, packet boundaries and truncated headers. IPv4 and UDP processing are under active implementation.
+The packet controller, Ethernet parser and fixed-header IPv4 parser are implemented. Directed XSim tests cover field extraction, stalls, packet boundaries, truncated headers and unsupported IPv4 formats. UDP processing is under active implementation.
 
-See [the design specification](docs/project_specification.md), [architecture notes](docs/architecture.md), [Ethernet parser notes](docs/ethernet_parser.md) and [protocol reference](docs/protocol.md) for the detailed interface and byte layout.
+See [the design specification](docs/project_specification.md), [architecture notes](docs/architecture.md), [Ethernet parser notes](docs/ethernet_parser.md), [IPv4 parser notes](docs/ipv4_parser.md) and [protocol reference](docs/protocol.md) for the detailed interface and byte layout.
