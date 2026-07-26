@@ -51,6 +51,17 @@ module udp_feed_handler_top #(
     logic [47:0] source_mac;
     logic [15:0] ether_type;
 
+    logic        ipv4_header_valid;
+    logic        ipv4_reject_valid;
+    feed_handler_pkg::reject_reason_t ipv4_reject_reason;
+    logic [3:0]  ipv4_version;
+    logic [3:0]  ipv4_header_length;
+    logic [15:0] ipv4_total_length;
+    logic [15:0] ipv4_fragment_field;
+    logic [7:0]  ipv4_protocol;
+    logic [31:0] source_ip;
+    logic [31:0] destination_ip;
+
     stream_packet_controller packet_controller (
         .clk,
         .reset,
@@ -79,6 +90,28 @@ module udp_feed_handler_top #(
         .ether_type
     );
 
+    ipv4_parser ipv4_parser_inst (
+        .clk,
+        .reset,
+        .s_data,
+        .transfer(input_transfer),
+        .packet_end,
+        .packet_active,
+        .byte_index(packet_byte_index),
+        .ethernet_header_valid,
+        .ether_type,
+        .header_valid(ipv4_header_valid),
+        .reject_valid(ipv4_reject_valid),
+        .reject_reason(ipv4_reject_reason),
+        .version(ipv4_version),
+        .header_length(ipv4_header_length),
+        .total_length(ipv4_total_length),
+        .fragment_field(ipv4_fragment_field),
+        .protocol(ipv4_protocol),
+        .source_ip,
+        .destination_ip
+    );
+
     // Later receive-path blocks consume the parsed Ethernet fields. Their
     // interface outputs remain inactive until those blocks are connected.
     always_comb begin
@@ -96,8 +129,12 @@ module udp_feed_handler_top #(
         price = 32'h0000_0000;
         quantity = 32'h0000_0000;
 
-        reject_valid = 1'b0;
-        reject_reason = feed_handler_pkg::REJECT_NONE;
+        reject_valid = short_ethernet_frame || ipv4_reject_valid;
+        if (short_ethernet_frame) begin
+            reject_reason = feed_handler_pkg::REJECT_SHORT_ETHERNET;
+        end else begin
+            reject_reason = ipv4_reject_reason;
+        end
         sequence_event_valid = 1'b0;
         sequence_gap = 1'b0;
         sequence_duplicate = 1'b0;
