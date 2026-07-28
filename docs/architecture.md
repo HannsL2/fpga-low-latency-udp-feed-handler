@@ -25,7 +25,7 @@ Each block has a narrow responsibility. The parsers recover protocol fields, the
 
 ## Cut-through processing
 
-The controller maintains a packet-relative byte index that advances on `s_valid && s_ready`. Destination MAC is available after byte 5, source MAC after byte 11 and EtherType after byte 13. If EtherType identifies IPv4, IP parsing begins with byte 14 while the remainder of the frame is still arriving.
+The controller maintains a packet-relative byte index that advances on `s_valid && s_ready`. Destination MAC is available after byte 5, source MAC after byte 11 and EtherType after byte 13. If EtherType identifies IPv4, IP parsing begins with byte 14 while the remainder of the frame is still arriving. The destination IP completes at byte 33 and the UDP destination port completes at byte 37. Header validation and the destination decision complete before payload byte 42.
 
 The receive path stores individual fields rather than a full packet. A small output holding register provides the elasticity needed for payload backpressure.
 

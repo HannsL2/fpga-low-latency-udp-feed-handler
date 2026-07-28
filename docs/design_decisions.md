@@ -16,6 +16,10 @@ Only IPv4 headers with IHL 5 are accepted. A fixed 20-byte header keeps the UDP 
 
 Fields are captured as their final bytes arrive. The design stores protocol fields and a small amount of flow-control state instead of buffering complete packets. This reduces storage and avoids adding a packet-length wait before processing begins.
 
+## UDP length consistency
+
+The UDP length must equal the IPv4 total length minus the fixed IPv4 header size. Checking the two independently supplied lengths catches malformed datagrams before payload processing begins. The UDP checksum is exposed for inspection but is not calculated by this receive path.
+
 ## Sequence state follows packet acceptance
 
 Only complete messages that pass the protocol and destination checks may update the sequence tracker. Otherwise, malformed traffic or packets for another destination could corrupt the expected sequence number.

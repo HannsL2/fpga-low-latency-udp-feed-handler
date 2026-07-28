@@ -14,9 +14,13 @@ Packet indexing starts at the first destination-MAC byte.
 | 30-33 | Destination IPv4 address |
 | 34-35 | UDP source port |
 | 36-37 | UDP destination port |
+| 38-39 | UDP length |
+| 40-41 | UDP checksum |
 | 42 onward | UDP payload |
 
 The supported IPv4 first byte is `8'h45`. The upper nibble selects version 4. The lower nibble gives an Internet Header Length of five 32-bit words, which is a 20-byte header.
+
+The UDP length includes its eight-byte header and payload. It must agree with the IPv4 payload length. The checksum field is captured but not validated; a zero UDP checksum is permitted for IPv4 traffic.
 
 ## Message payload
 

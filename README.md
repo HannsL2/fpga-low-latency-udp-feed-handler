@@ -72,10 +72,10 @@ vivado -mode batch -nojournal -nolog -source scripts/create_vivado_project.tcl
 vivado build/vivado/feed_handler.xpr
 ```
 
-The project includes the directed Ethernet and IPv4 tests as simulation sources. A focused test can also be run without opening the graphical interface:
+The project includes the directed Ethernet, IPv4 and UDP/filter tests as simulation sources. A focused test can also be run without opening the graphical interface:
 
 ```powershell
-vivado -mode batch -nojournal -nolog -source scripts/run_directed_simulation.tcl -tclargs tb_ipv4_parser
+vivado -mode batch -nojournal -nolog -source scripts/run_directed_simulation.tcl -tclargs tb_udp_filter
 ```
 
 Generated project and simulation data remain under `build/` and are not tracked by Git.
@@ -96,6 +96,6 @@ Generated project and simulation data remain under `build/` and are not tracked 
 
 ## Current status
 
-The packet controller, Ethernet parser and fixed-header IPv4 parser are implemented. Directed XSim tests cover field extraction, stalls, packet boundaries, truncated headers and unsupported IPv4 formats. UDP processing is under active implementation.
+The checked-in receive path includes packet control, Ethernet and fixed-header IPv4 parsing, UDP header extraction and configurable destination filtering. Directed XSim tests cover field extraction, valid gaps, packet boundaries, truncated headers, unsupported IPv4 formats, UDP length checks and destination mismatches.
 
-See [the design specification](docs/project_specification.md), [architecture notes](docs/architecture.md), [Ethernet parser notes](docs/ethernet_parser.md), [IPv4 parser notes](docs/ipv4_parser.md) and [protocol reference](docs/protocol.md) for the detailed interface and byte layout.
+See [the design specification](docs/project_specification.md), [architecture notes](docs/architecture.md), [Ethernet parser notes](docs/ethernet_parser.md), [IPv4 parser notes](docs/ipv4_parser.md), [UDP/filter notes](docs/udp_filter.md) and [protocol reference](docs/protocol.md) for the detailed interface and byte layout.
