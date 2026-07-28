@@ -63,6 +63,23 @@ AMD Vivado and Vivado XSim 2026.1 are the reference tools. Verification is built
 
 The representative implementation target is the Artix-7 `xc7a35tcpg236-1` with an 8 ns clock constraint. Timing, utilisation and latency figures will be added only after they have been produced by the checked-in Vivado flow.
 
+### Opening the design in Vivado
+
+Run the following commands from the repository root in a shell where `vivado` is available:
+
+```powershell
+vivado -mode batch -nojournal -nolog -source scripts/create_vivado_project.tcl
+vivado build/vivado/feed_handler.xpr
+```
+
+The project includes the directed Ethernet and IPv4 tests as simulation sources. A focused test can also be run without opening the graphical interface:
+
+```powershell
+vivado -mode batch -nojournal -nolog -source scripts/run_directed_simulation.tcl -tclargs tb_ipv4_parser
+```
+
+Generated project and simulation data remain under `build/` and are not tracked by Git.
+
 ## Repository structure
 
 | Path | Purpose |
