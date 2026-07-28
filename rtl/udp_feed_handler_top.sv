@@ -62,6 +62,19 @@ module udp_feed_handler_top #(
     logic [31:0] source_ip;
     logic [31:0] destination_ip;
 
+    logic        udp_header_valid;
+    logic        udp_reject_valid;
+    feed_handler_pkg::reject_reason_t udp_reject_reason;
+    logic [15:0] source_port;
+    logic [15:0] destination_port;
+    logic [15:0] udp_length;
+    logic [15:0] udp_checksum;
+
+    logic        filter_decision_valid;
+    logic        filter_packet_accepted;
+    logic        filter_reject_valid;
+    feed_handler_pkg::reject_reason_t filter_reject_reason;
+
     stream_packet_controller packet_controller (
         .clk,
         .reset,
@@ -112,8 +125,42 @@ module udp_feed_handler_top #(
         .destination_ip
     );
 
-    // Later receive-path blocks consume the parsed Ethernet fields. Their
-    // interface outputs remain inactive until those blocks are connected.
+    udp_parser udp_parser_inst (
+        .clk,
+        .reset,
+        .s_data,
+        .transfer(input_transfer),
+        .packet_end,
+        .packet_active,
+        .byte_index(packet_byte_index),
+        .ipv4_header_valid,
+        .ipv4_total_length,
+        .header_valid(udp_header_valid),
+        .reject_valid(udp_reject_valid),
+        .reject_reason(udp_reject_reason),
+        .source_port,
+        .destination_port,
+        .udp_length,
+        .checksum(udp_checksum)
+    );
+
+    packet_filter #(
+        .EXPECTED_DESTINATION_MAC(EXPECTED_DESTINATION_MAC),
+        .EXPECTED_DESTINATION_IP(EXPECTED_DESTINATION_IP),
+        .EXPECTED_DESTINATION_PORT(EXPECTED_DESTINATION_PORT)
+    ) packet_filter_inst (
+        .udp_header_valid,
+        .destination_mac,
+        .destination_ip,
+        .destination_port,
+        .decision_valid(filter_decision_valid),
+        .packet_accepted(filter_packet_accepted),
+        .reject_valid(filter_reject_valid),
+        .reject_reason(filter_reject_reason)
+    );
+
+    // Payload decoding and sequence tracking are connected after the packet
+    // has passed the header checks and destination filter.
     always_comb begin
         s_ready = !reset;
 
@@ -129,11 +176,18 @@ module udp_feed_handler_top #(
         price = 32'h0000_0000;
         quantity = 32'h0000_0000;
 
-        reject_valid = short_ethernet_frame || ipv4_reject_valid;
+        reject_valid = short_ethernet_frame || ipv4_reject_valid ||
+                       udp_reject_valid || filter_reject_valid;
         if (short_ethernet_frame) begin
             reject_reason = feed_handler_pkg::REJECT_SHORT_ETHERNET;
-        end else begin
+        end else if (ipv4_reject_valid) begin
             reject_reason = ipv4_reject_reason;
+        end else if (udp_reject_valid) begin
+            reject_reason = udp_reject_reason;
+        end else if (filter_reject_valid) begin
+            reject_reason = filter_reject_reason;
+        end else begin
+            reject_reason = feed_handler_pkg::REJECT_NONE;
         end
         sequence_event_valid = 1'b0;
         sequence_gap = 1'b0;
