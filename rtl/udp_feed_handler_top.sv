@@ -75,6 +75,13 @@ module udp_feed_handler_top #(
     logic        filter_reject_valid;
     feed_handler_pkg::reject_reason_t filter_reject_reason;
 
+    logic [7:0]  payload_byte_data;
+    logic        payload_byte_valid;
+    logic        payload_byte_last;
+    logic [15:0] payload_byte_index;
+    logic        decoder_reject_valid;
+    feed_handler_pkg::reject_reason_t decoder_reject_reason;
+
     stream_packet_controller packet_controller (
         .clk,
         .reset,
@@ -159,25 +166,52 @@ module udp_feed_handler_top #(
         .reject_reason(filter_reject_reason)
     );
 
+    udp_payload_router payload_router (
+        .clk,
+        .reset,
+        .s_data,
+        .s_valid,
+        .s_last,
+        .byte_index(packet_byte_index),
+        .packet_active,
+        .decision_valid(filter_decision_valid),
+        .destination_match(filter_packet_accepted),
+        .udp_length,
+        .s_ready,
+        .m_payload_data,
+        .m_payload_valid,
+        .m_payload_ready,
+        .m_payload_last,
+        .payload_byte_data,
+        .payload_byte_valid,
+        .payload_byte_last,
+        .payload_byte_index
+    );
+
+    market_message_decoder message_decoder (
+        .clk,
+        .reset,
+        .payload_data(payload_byte_data),
+        .payload_valid(payload_byte_valid),
+        .payload_last(payload_byte_last),
+        .payload_index(payload_byte_index),
+        .message_valid,
+        .reject_valid(decoder_reject_valid),
+        .reject_reason(decoder_reject_reason),
+        .protocol_version,
+        .message_type,
+        .sequence_number,
+        .instrument_id,
+        .price,
+        .quantity
+    );
+
     // Payload decoding and sequence tracking are connected after the packet
     // has passed the header checks and destination filter.
     always_comb begin
-        s_ready = !reset;
-
-        m_payload_data = 8'h00;
-        m_payload_valid = 1'b0;
-        m_payload_last = 1'b0;
-
-        message_valid = 1'b0;
-        protocol_version = 8'h00;
-        message_type = 8'h00;
-        sequence_number = 32'h0000_0000;
-        instrument_id = 16'h0000;
-        price = 32'h0000_0000;
-        quantity = 32'h0000_0000;
-
         reject_valid = short_ethernet_frame || ipv4_reject_valid ||
-                       udp_reject_valid || filter_reject_valid;
+                       udp_reject_valid || filter_reject_valid ||
+                       decoder_reject_valid;
         if (short_ethernet_frame) begin
             reject_reason = feed_handler_pkg::REJECT_SHORT_ETHERNET;
         end else if (ipv4_reject_valid) begin
@@ -186,6 +220,8 @@ module udp_feed_handler_top #(
             reject_reason = udp_reject_reason;
         end else if (filter_reject_valid) begin
             reject_reason = filter_reject_reason;
+        end else if (decoder_reject_valid) begin
+            reject_reason = decoder_reject_reason;
         end else begin
             reject_reason = feed_handler_pkg::REJECT_NONE;
         end

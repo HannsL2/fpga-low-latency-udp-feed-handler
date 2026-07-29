@@ -30,7 +30,8 @@ package feed_handler_pkg;
         REJECT_DESTINATION_PORT,
         REJECT_SHORT_PAYLOAD,
         REJECT_PROTOCOL_VERSION,
-        REJECT_MESSAGE_TYPE
+        REJECT_MESSAGE_TYPE,
+        REJECT_PAYLOAD_LENGTH
     } reject_reason_t;
 
 endpackage
