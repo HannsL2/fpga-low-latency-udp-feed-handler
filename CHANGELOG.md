@@ -14,3 +14,6 @@
 - Added UDP length consistency checks and truncated-header detection.
 - Added configurable destination MAC, IPv4 address and UDP port filtering.
 - Added a reproducible Vivado project and focused simulation runner.
+- Added cut-through payload forwarding with output backpressure.
+- Added fixed-format market-message decoding for all four supported message types.
+- Added protocol, type and payload-length validation.
