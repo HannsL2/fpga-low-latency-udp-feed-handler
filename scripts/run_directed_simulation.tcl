@@ -5,10 +5,10 @@ if {$argc < 1 || $argc > 2} {
 }
 
 set testbench [lindex $argv 0]
-set supported_testbenches [list tb_ethernet_parser tb_ipv4_parser tb_udp_filter]
+set supported_testbenches [list tb_ethernet_parser tb_ipv4_parser tb_udp_filter tb_market_message_decoder tb_feed_handler_basic]
 
 if {[lsearch -exact $supported_testbenches $testbench] < 0} {
-    error "Unsupported testbench '$testbench'. Choose tb_ethernet_parser, tb_ipv4_parser or tb_udp_filter."
+    error "Unsupported testbench '$testbench'. Choose tb_ethernet_parser, tb_ipv4_parser, tb_udp_filter or tb_feed_handler_basic."
 }
 
 set script_dir  [file dirname [file normalize [info script]]]

@@ -42,6 +42,11 @@ module tb_feed_handler_basic;
 
     logic [7:0] packet [0:PACKET_BYTES-1];
     logic saw_add_order;
+    int unsigned payload_count;
+    int unsigned payload_last_count;
+    logic output_stalled;
+    logic [7:0] stalled_data;
+    logic stalled_last;
 
     always #(CLOCK_PERIOD / 2) clk = ~clk;
 
@@ -80,10 +85,35 @@ module tb_feed_handler_basic;
     always_ff @(posedge clk) begin
         if (reset) begin
             saw_add_order <= 1'b0;
+            payload_count <= 0;
+            payload_last_count <= 0;
+            output_stalled <= 1'b0;
         end else if (message_valid &&
                      protocol_version == MARKET_PROTOCOL_VERSION &&
                      message_type == MESSAGE_ADD_ORDER) begin
             saw_add_order <= 1'b1;
+        end
+
+        if (!reset) begin
+            if (m_payload_valid && m_payload_ready) begin
+                if (m_payload_data != packet[42 + payload_count]) begin
+                    $fatal(1, "Payload byte %0d was corrupted.", payload_count);
+                end
+                payload_count <= payload_count + 1;
+                if (m_payload_last) payload_last_count <= payload_last_count + 1;
+            end
+
+            if (m_payload_valid && !m_payload_ready) begin
+                if (output_stalled &&
+                    (m_payload_data != stalled_data || m_payload_last != stalled_last)) begin
+                    $fatal(1, "Payload output changed while backpressured.");
+                end
+                output_stalled <= 1'b1;
+                stalled_data <= m_payload_data;
+                stalled_last <= m_payload_last;
+            end else begin
+                output_stalled <= 1'b0;
+            end
         end
     end
 
@@ -197,14 +227,31 @@ module tb_feed_handler_basic;
         reset = 1'b0;
         repeat (2) @(posedge clk);
 
-        send_packet();
-        repeat (4) @(posedge clk);
+        fork
+            send_packet();
+            begin
+                wait (payload_count == 4);
+                @(negedge clk);
+                m_payload_ready = 1'b0;
+                repeat (3) @(posedge clk);
+                @(negedge clk);
+                m_payload_ready = 1'b1;
+            end
+        join
+        repeat (6) @(posedge clk);
 
         if (!saw_add_order) begin
             $fatal(1, "Decoder output was not observed for the directed Add Order packet.");
         end
+        if (payload_count != 16 || payload_last_count != 1) begin
+            $fatal(1, "Accepted payload output was not transferred exactly once.");
+        end
+        if (sequence_number != 32'h0000_0001 || instrument_id != 16'h1234 ||
+            price != 32'h0000_3039 || quantity != 32'h0000_0064) begin
+            $fatal(1, "Decoded Add Order fields were incorrect.");
+        end
 
-        $display("PASS: accepted Add Order message was decoded.");
+        $display("PASS: accepted Add Order payload and decoded fields verified with backpressure.");
         $finish;
     end
 

@@ -22,12 +22,16 @@ set rtl_files [list \
     [file join $repo_root rtl ipv4_parser.sv] \
     [file join $repo_root rtl udp_parser.sv] \
     [file join $repo_root rtl packet_filter.sv] \
+    [file join $repo_root rtl udp_payload_router.sv] \
+    [file join $repo_root rtl market_message_decoder.sv] \
     [file join $repo_root rtl udp_feed_handler_top.sv]]
 
 set simulation_files [list \
     [file join $repo_root tb basic tb_ethernet_parser.sv] \
     [file join $repo_root tb basic tb_ipv4_parser.sv] \
-    [file join $repo_root tb basic tb_udp_filter.sv]]
+    [file join $repo_root tb basic tb_udp_filter.sv] \
+    [file join $repo_root tb basic tb_market_message_decoder.sv] \
+    [file join $repo_root tb basic tb_feed_handler_basic.sv]]
 
 add_files -norecurse -fileset sources_1 $rtl_files
 add_files -norecurse -fileset sim_1 $simulation_files
@@ -35,7 +39,7 @@ add_files -norecurse -fileset sim_1 $simulation_files
 set_property file_type SystemVerilog [get_files $rtl_files]
 set_property file_type SystemVerilog [get_files $simulation_files]
 set_property top udp_feed_handler_top [get_filesets sources_1]
-set_property top tb_udp_filter [get_filesets sim_1]
+set_property top tb_feed_handler_basic [get_filesets sim_1]
 set_property xsim.simulate.runtime 5us [get_filesets sim_1]
 
 update_compile_order -fileset sources_1
