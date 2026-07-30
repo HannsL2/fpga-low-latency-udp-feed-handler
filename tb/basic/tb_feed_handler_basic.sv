@@ -52,9 +52,18 @@ module tb_feed_handler_basic;
     logic [31:0] out_of_order_message_count;
 
     logic [7:0] packet [0:PACKET_BYTES-1];
+    logic [7:0] expected_payload [0:47];
     logic saw_add_order;
     int unsigned payload_count;
     int unsigned payload_last_count;
+    int unsigned expected_payload_size;
+    int unsigned message_count;
+    int unsigned reject_event_count;
+    int unsigned gap_event_count;
+    reject_reason_t last_reject_reason;
+    logic [31:0] last_gap_expected;
+    logic [31:0] last_gap_received;
+    logic [31:0] last_gap_missing;
     logic output_stalled;
     logic [7:0] stalled_data;
     logic stalled_last;
@@ -109,6 +118,13 @@ module tb_feed_handler_basic;
             saw_add_order <= 1'b0;
             payload_count <= 0;
             payload_last_count <= 0;
+            message_count <= 0;
+            reject_event_count <= 0;
+            gap_event_count <= 0;
+            last_reject_reason <= REJECT_NONE;
+            last_gap_expected <= 32'h0000_0000;
+            last_gap_received <= 32'h0000_0000;
+            last_gap_missing <= 32'h0000_0000;
             output_stalled <= 1'b0;
         end else if (message_valid &&
                      protocol_version == MARKET_PROTOCOL_VERSION &&
@@ -118,11 +134,23 @@ module tb_feed_handler_basic;
 
         if (!reset) begin
             if (m_payload_valid && m_payload_ready) begin
-                if (m_payload_data != packet[42 + payload_count]) begin
+                if (m_payload_data != expected_payload[payload_count]) begin
                     $fatal(1, "Payload byte %0d was corrupted.", payload_count);
                 end
                 payload_count <= payload_count + 1;
                 if (m_payload_last) payload_last_count <= payload_last_count + 1;
+            end
+
+            if (message_valid) message_count <= message_count + 1;
+            if (reject_valid) begin
+                reject_event_count <= reject_event_count + 1;
+                last_reject_reason <= reject_reason;
+            end
+            if (sequence_event_valid && sequence_gap) begin
+                gap_event_count <= gap_event_count + 1;
+                last_gap_expected <= expected_sequence;
+                last_gap_received <= received_sequence;
+                last_gap_missing <= missing_message_count;
             end
 
             if (m_payload_valid && !m_payload_ready) begin
@@ -139,7 +167,10 @@ module tb_feed_handler_basic;
         end
     end
 
-    task automatic build_add_order_packet;
+    task automatic build_add_order_packet(
+        input logic [31:0] selected_sequence,
+        input logic [15:0] selected_destination_port
+    );
         int unsigned index;
         begin
             for (index = 0; index < PACKET_BYTES; index++) begin
@@ -188,8 +219,8 @@ module tb_feed_handler_basic;
             // UDP header: source port 10000, destination port 18000.
             packet[34] = 8'h27;
             packet[35] = 8'h10;
-            packet[36] = 8'h46;
-            packet[37] = 8'h50;
+            packet[36] = selected_destination_port[15:8];
+            packet[37] = selected_destination_port[7:0];
             packet[38] = 8'h00;
             packet[39] = 8'h18;
             packet[40] = 8'h00;
@@ -199,10 +230,10 @@ module tb_feed_handler_basic;
             // price, and quantity, all multi-byte fields big-endian.
             packet[42] = 8'h01;
             packet[43] = 8'h01;
-            packet[44] = 8'h00;
-            packet[45] = 8'h00;
-            packet[46] = 8'h00;
-            packet[47] = 8'h01;
+            packet[44] = selected_sequence[31:24];
+            packet[45] = selected_sequence[23:16];
+            packet[46] = selected_sequence[15:8];
+            packet[47] = selected_sequence[7:0];
             packet[48] = 8'h12;
             packet[49] = 8'h34;
             packet[50] = 8'h00;
@@ -213,6 +244,16 @@ module tb_feed_handler_basic;
             packet[55] = 8'h00;
             packet[56] = 8'h00;
             packet[57] = 8'h64;
+        end
+    endtask
+
+    task automatic record_expected_payload;
+        int unsigned index;
+        begin
+            for (index = 0; index < 16; index++) begin
+                expected_payload[expected_payload_size + index] = packet[42 + index];
+            end
+            expected_payload_size = expected_payload_size + 16;
         end
     endtask
 
@@ -241,14 +282,15 @@ module tb_feed_handler_basic;
         s_valid = 1'b0;
         s_last = 1'b0;
         m_payload_ready = 1'b1;
-
-        build_add_order_packet();
+        expected_payload_size = 0;
 
         repeat (4) @(posedge clk);
         @(negedge clk);
         reset = 1'b0;
         repeat (2) @(posedge clk);
 
+        build_add_order_packet(32'd1, 16'd18000);
+        record_expected_payload();
         fork
             send_packet();
             begin
@@ -260,31 +302,51 @@ module tb_feed_handler_basic;
                 m_payload_ready = 1'b1;
             end
         join
-        repeat (6) @(posedge clk);
+
+        build_add_order_packet(32'd2, 16'd18000);
+        record_expected_payload();
+        send_packet();
+
+        build_add_order_packet(32'd3, 16'd18001);
+        send_packet();
+
+        build_add_order_packet(32'd5, 16'd18000);
+        record_expected_payload();
+        send_packet();
+
+        repeat (8) @(posedge clk);
 
         if (!saw_add_order) begin
             $fatal(1, "Decoder output was not observed for the directed Add Order packet.");
         end
-        if (payload_count != 16 || payload_last_count != 1) begin
-            $fatal(1, "Accepted payload output was not transferred exactly once.");
+        if (message_count != 3 || reject_event_count != 1 ||
+            last_reject_reason != REJECT_DESTINATION_PORT) begin
+            $fatal(1, "Accepted and rejected message events were incorrect.");
         end
-        if (sequence_number != 32'h0000_0001 || instrument_id != 16'h1234 ||
+        if (payload_count != 48 || payload_last_count != 3) begin
+            $fatal(1, "Accepted payload output totals were incorrect.");
+        end
+        if (sequence_number != 32'h0000_0005 || instrument_id != 16'h1234 ||
             price != 32'h0000_3039 || quantity != 32'h0000_0064) begin
             $fatal(1, "Decoded Add Order fields were incorrect.");
         end
-        if (total_packet_count != 1 || accepted_packet_count != 1 ||
-            rejected_packet_count != 0 || valid_message_count != 1) begin
+        if (gap_event_count != 1 || last_gap_expected != 32'd3 ||
+            last_gap_received != 32'd5 || last_gap_missing != 32'd2) begin
+            $fatal(1, "Integrated sequence-gap result was incorrect.");
+        end
+        if (total_packet_count != 4 || accepted_packet_count != 3 ||
+            rejected_packet_count != 1 || valid_message_count != 3) begin
             $fatal(1, "Integrated packet statistics were incorrect.");
         end
         if (malformed_packet_count != 0 || unsupported_ethertype_count != 0 ||
             non_udp_packet_count != 0 || destination_mac_mismatch_count != 0 ||
-            destination_ip_mismatch_count != 0 || destination_port_mismatch_count != 0 ||
-            sequence_gap_count != 0 || missing_message_total != 0 ||
+            destination_ip_mismatch_count != 0 || destination_port_mismatch_count != 1 ||
+            sequence_gap_count != 1 || missing_message_total != 2 ||
             duplicate_message_count != 0 || out_of_order_message_count != 0) begin
             $fatal(1, "Unexpected error statistics were recorded.");
         end
 
-        $display("PASS: accepted Add Order payload and decoded fields verified with backpressure.");
+        $display("PASS: integrated acceptance, rejection, backpressure, sequencing and statistics verified.");
         $finish;
     end
 
