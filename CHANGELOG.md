@@ -19,3 +19,5 @@
 - Added protocol, type and payload-length validation.
 - Added sequence initialization, progression and anomaly classification.
 - Added gap counts, duplicate detection, out-of-order detection and wraparound handling.
+- Added wrapping packet, rejection, message and sequence statistics.
+- Added dedicated counters for protocol and destination-filter rejection categories.

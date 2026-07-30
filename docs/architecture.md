@@ -23,6 +23,8 @@ flowchart LR
 
 Each block has a narrow responsibility. The parsers recover protocol fields, the filter decides whether the packet belongs to the configured feed, and the decoder interprets the accepted payload. The sequence checker consumes only `message_valid` events, after a complete message has passed all validation checks.
 
+Statistics are updated from the same packet-end, rejection, message and sequence pulses exposed by the functional blocks. Counter logic therefore remains outside the parsing and decoding state machines.
+
 ## Cut-through processing
 
 The controller maintains a packet-relative byte index that advances on `s_valid && s_ready`. Destination MAC is available after byte 5, source MAC after byte 11 and EtherType after byte 13. If EtherType identifies IPv4, IP parsing begins with byte 14 while the remainder of the frame is still arriving. The destination IP completes at byte 33 and the UDP destination port completes at byte 37. Header validation and the destination decision complete before payload byte 42.
