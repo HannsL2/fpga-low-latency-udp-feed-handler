@@ -206,6 +206,20 @@ module udp_feed_handler_top #(
         .quantity
     );
 
+    sequence_checker sequence_checker_inst (
+        .clk,
+        .reset,
+        .message_valid,
+        .sequence_number,
+        .sequence_event_valid,
+        .sequence_gap,
+        .sequence_duplicate,
+        .sequence_out_of_order,
+        .expected_sequence,
+        .received_sequence,
+        .missing_message_count
+    );
+
     // Payload decoding and sequence tracking are connected after the packet
     // has passed the header checks and destination filter.
     always_comb begin
@@ -225,14 +239,6 @@ module udp_feed_handler_top #(
         end else begin
             reject_reason = feed_handler_pkg::REJECT_NONE;
         end
-        sequence_event_valid = 1'b0;
-        sequence_gap = 1'b0;
-        sequence_duplicate = 1'b0;
-        sequence_out_of_order = 1'b0;
-        expected_sequence = 32'h0000_0000;
-        received_sequence = 32'h0000_0000;
-        missing_message_count = 32'h0000_0000;
-
         total_packet_count = 32'h0000_0000;
         accepted_packet_count = 32'h0000_0000;
         rejected_packet_count = 32'h0000_0000;
