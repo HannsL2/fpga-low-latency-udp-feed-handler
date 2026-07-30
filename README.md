@@ -63,9 +63,9 @@ AMD Vivado and Vivado XSim 2026.1 are the reference tools. Verification is built
 
 The representative implementation target is the Artix-7 `xc7a35tcpg236-1` with an 8 ns clock constraint. Timing, utilisation and latency figures will be added only after they have been produced by the checked-in Vivado flow.
 
-### Simulation
+### Simulation evidence
 
-The checked-in Tcl scripts recreate the Vivado project and run individual XSim testbenches. Generated project and simulation data remain under `build/` and are not tracked by Git. See the [Vivado simulation guide](docs/vivado_simulation.md) for the command-line flow, graphical workflow and recommended waveform signals.
+Vivado XSim 2026.1 is the reference simulator. Checked-in Tcl captures the source files and simulation-top selection, while generated project and simulator data remain outside version control. The [XSim verification record](docs/xsim_verification.md) reports the executed tests, assertion scope, UVM scoreboard result and evidence boundary.
 
 ## Repository structure
 

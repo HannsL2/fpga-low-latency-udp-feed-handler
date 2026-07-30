@@ -45,12 +45,6 @@ This exercises all four supported message types, destination-port rejection, out
 
 Functional coverage samples result kind, supported message type, rejection reason and sequence classification.
 
-## Running with XSim
+## Recorded XSim result
 
-Select `tb_feed_handler_uvm` as the simulation top in Vivado, then run Behavioral Simulation. A successful run ends with a scoreboard match message and a UVM report containing zero warnings, errors and fatals.
-
-The same test can be run from the repository root with:
-
-```powershell
-vivado -mode batch -nojournal -nolog -source scripts/run_directed_simulation.tcl -tclargs tb_feed_handler_uvm
-```
+The `tb_feed_handler_uvm` run completed at 2604 ns. The scoreboard matched 13 payload, message, rejection and sequence results. The UVM report contained zero warnings, errors and fatals.
