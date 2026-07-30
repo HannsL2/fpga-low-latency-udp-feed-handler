@@ -25,6 +25,7 @@ set rtl_files [list \
     [file join $repo_root rtl udp_payload_router.sv] \
     [file join $repo_root rtl market_message_decoder.sv] \
     [file join $repo_root rtl sequence_checker.sv] \
+    [file join $repo_root rtl statistics_counters.sv] \
     [file join $repo_root rtl udp_feed_handler_top.sv]]
 
 set simulation_files [list \
@@ -33,6 +34,7 @@ set simulation_files [list \
     [file join $repo_root tb basic tb_udp_filter.sv] \
     [file join $repo_root tb basic tb_market_message_decoder.sv] \
     [file join $repo_root tb basic tb_sequence_checker.sv] \
+    [file join $repo_root tb basic tb_statistics_counters.sv] \
     [file join $repo_root tb basic tb_feed_handler_basic.sv]]
 
 add_files -norecurse -fileset sources_1 $rtl_files

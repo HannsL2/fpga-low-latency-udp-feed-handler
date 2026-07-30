@@ -39,6 +39,17 @@ module tb_feed_handler_basic;
     logic [31:0] total_packet_count;
     logic [31:0] accepted_packet_count;
     logic [31:0] rejected_packet_count;
+    logic [31:0] malformed_packet_count;
+    logic [31:0] unsupported_ethertype_count;
+    logic [31:0] non_udp_packet_count;
+    logic [31:0] destination_mac_mismatch_count;
+    logic [31:0] destination_ip_mismatch_count;
+    logic [31:0] destination_port_mismatch_count;
+    logic [31:0] valid_message_count;
+    logic [31:0] sequence_gap_count;
+    logic [31:0] missing_message_total;
+    logic [31:0] duplicate_message_count;
+    logic [31:0] out_of_order_message_count;
 
     logic [7:0] packet [0:PACKET_BYTES-1];
     logic saw_add_order;
@@ -79,7 +90,18 @@ module tb_feed_handler_basic;
         .missing_message_count,
         .total_packet_count,
         .accepted_packet_count,
-        .rejected_packet_count
+        .rejected_packet_count,
+        .malformed_packet_count,
+        .unsupported_ethertype_count,
+        .non_udp_packet_count,
+        .destination_mac_mismatch_count,
+        .destination_ip_mismatch_count,
+        .destination_port_mismatch_count,
+        .valid_message_count,
+        .sequence_gap_count,
+        .missing_message_total,
+        .duplicate_message_count,
+        .out_of_order_message_count
     );
 
     always_ff @(posedge clk) begin
@@ -249,6 +271,17 @@ module tb_feed_handler_basic;
         if (sequence_number != 32'h0000_0001 || instrument_id != 16'h1234 ||
             price != 32'h0000_3039 || quantity != 32'h0000_0064) begin
             $fatal(1, "Decoded Add Order fields were incorrect.");
+        end
+        if (total_packet_count != 1 || accepted_packet_count != 1 ||
+            rejected_packet_count != 0 || valid_message_count != 1) begin
+            $fatal(1, "Integrated packet statistics were incorrect.");
+        end
+        if (malformed_packet_count != 0 || unsupported_ethertype_count != 0 ||
+            non_udp_packet_count != 0 || destination_mac_mismatch_count != 0 ||
+            destination_ip_mismatch_count != 0 || destination_port_mismatch_count != 0 ||
+            sequence_gap_count != 0 || missing_message_total != 0 ||
+            duplicate_message_count != 0 || out_of_order_message_count != 0) begin
+            $fatal(1, "Unexpected error statistics were recorded.");
         end
 
         $display("PASS: accepted Add Order payload and decoded fields verified with backpressure.");
