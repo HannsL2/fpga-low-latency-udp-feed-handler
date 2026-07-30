@@ -10,6 +10,7 @@
 | Design under test | `udp_feed_handler_top` and focused receive-path modules |
 | Integrated directed top | `tb_feed_handler_basic` |
 | UVM top | `tb_feed_handler_uvm` |
+| Constrained-random top | `tb_feed_handler_uvm_random` |
 | UVM library | UVM 1.2 supplied with Vivado |
 
 The checked-in Tcl files define the project source list and selectable simulation tops. Generated Vivado project data and simulator working files are excluded from version control.
@@ -21,7 +22,7 @@ The checked-in Tcl files define the project source list and selectable simulatio
 | Focused directed tests | Isolate parser, decoder, sequence and statistics behavior | Six passing XSim tests |
 | Integrated directed test | Exercise the complete receive path across accepted and rejected packets | Four packets, three accepted messages, one rejection and one sequence gap |
 | Protocol assertions | Continuously enforce stream and event invariants | No assertion failures across the directed and UVM runs |
-| UVM environment | Separate stimulus, monitoring, reference prediction, comparison and coverage | 13 scoreboard matches with zero UVM warnings, errors or fatals |
+| UVM environment | Separate stimulus, monitoring, reference prediction, comparison and coverage | Deterministic smoke test and two passing 40-packet random seeds |
 
 ## Directed XSim results
 
@@ -63,6 +64,13 @@ The run completed at 2604 ns with:
 - 4 accepted messages
 - 1 destination-port rejection
 - 1 sequence gap representing 2 missing messages
+
+The constrained-random top completed two recorded seeds with zero UVM warnings, errors or fatals:
+
+| Seed | Completion time | Accepted | Rejected | Sequence events: gap / duplicate / older | Scoreboard matches |
+| ---: | ---: | ---: | ---: | ---: | ---: |
+| 20260730 | 34540 ns | 28 | 12 | 5 / 3 / 5 | 96 |
+| 20260731 | 33788 ns | 31 | 9 | 4 / 6 / 5 | 102 |
 
 ## Evidence boundary
 

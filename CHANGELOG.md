@@ -30,3 +30,5 @@
 - Added a UVM 1.2 packet driver, passive monitors, reference scoreboard and functional coverage.
 - Added a five-packet UVM smoke scenario covering all message types, rejection, backpressure and sequence gaps.
 - Added the UVM testbench to the generated Vivado project and selectable simulation tops.
+- Added a 40-packet constrained-random UVM regression with reproducible seed results.
+- Added weighted destination, sequence, timing and message-field randomization.

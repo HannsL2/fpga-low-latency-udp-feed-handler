@@ -45,6 +45,26 @@ This exercises all four supported message types, destination-port rejection, out
 
 Functional coverage samples result kind, supported message type, rejection reason and sequence classification.
 
+## Constrained-random regression
+
+`feed_handler_random_test` generates 40 packets per seed. Weighted constraints vary:
+
+- all supported message types
+- accepted destinations and MAC, IPv4 or UDP-port mismatches
+- normal, gap, duplicate and older sequence numbers
+- zero to two idle cycles between input bytes
+- zero to four cycles of payload backpressure
+- instrument, price and quantity fields
+
+The test requires at least one gap, duplicate and older sequence event. It also checks total, accepted, rejected, valid-message and destination-mismatch counter relationships at the end of every run.
+
+| Seed | Accepted | Rejected | Gaps | Duplicates | Older | Scoreboard matches | Result |
+| ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- |
+| 20260730 | 28 | 12 | 5 | 3 | 5 | 96 | Pass |
+| 20260731 | 31 | 9 | 4 | 6 | 5 | 102 | Pass |
+
 ## Recorded XSim result
 
 The `tb_feed_handler_uvm` run completed at 2604 ns. The scoreboard matched 13 payload, message, rejection and sequence results. The UVM report contained zero warnings, errors and fatals.
+
+The constrained-random runs use the separate `tb_feed_handler_uvm_random` simulation top. Both recorded seeds completed with zero UVM warnings, errors and fatals.
