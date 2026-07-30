@@ -32,3 +32,4 @@
 - Added the UVM testbench to the generated Vivado project and selectable simulation tops.
 - Added a 40-packet constrained-random UVM regression with reproducible seed results.
 - Added weighted destination, sequence, timing and message-field randomization.
+- Refactored the UVM environment into modular class files with a named sequencer and input agent.

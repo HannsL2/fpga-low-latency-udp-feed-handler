@@ -2,14 +2,47 @@
 
 ## Structure
 
-The UVM 1.2 environment is connected to the same byte-stream interface used by the directed tests.
+The UVM 1.2 environment uses one agent for receive-stream stimulus and observation. Output observation, result checking and functional coverage remain direct children of the environment.
 
 ```text
-packet sequence -> sequencer -> driver -> DUT
-                                     |
-input monitor -> reference model -> scoreboard <- output monitor
-                                             |
-                                      functional coverage
+tb/uvm/
+|-- feed_handler_if.sv
+|-- feed_handler_uvm_pkg.sv
+|-- feed_packet_item.svh
+|-- feed_result_item.svh
+|-- feed_handler_sequencer.svh
+|-- feed_handler_driver.svh
+|-- feed_input_monitor.svh
+|-- feed_input_agent.svh
+|-- feed_output_monitor.svh
+|-- feed_handler_scoreboard.svh
+|-- feed_handler_coverage.svh
+|-- feed_handler_env.svh
+|-- feed_handler_base_sequence.svh
+|-- feed_handler_smoke_sequence.svh
+|-- feed_handler_random_sequence.svh
+|-- feed_handler_base_test.svh
+|-- feed_handler_smoke_test.svh
+|-- feed_handler_random_test.svh
+`-- feed_handler_tb_top.sv
+```
+
+The package imports UVM and the shared feed-handler definitions, then includes the transaction, component, sequence and test classes in dependency order. The elaborated hierarchy is:
+
+```text
+feed_handler_tb_top
+|-- DUT: udp_feed_handler_top
+|-- feed_handler_if
+`-- run_test()
+    `-- selected feed-handler test
+        `-- env: feed_handler_env
+            |-- input_agent: feed_input_agent
+            |   |-- sequencer: feed_handler_sequencer
+            |   |-- driver: feed_handler_driver
+            |   `-- monitor: feed_input_monitor
+            |-- output_monitor: feed_output_monitor
+            |-- scoreboard: feed_handler_scoreboard
+            `-- coverage: feed_handler_coverage
 ```
 
 `feed_packet_item` carries a complete Ethernet frame together with constrained input-gap, inter-packet-idle and payload-stall controls. The driver applies reset, obeys the input ready/valid handshake and can apply output backpressure while a payload is active.
@@ -60,11 +93,11 @@ The test requires at least one gap, duplicate and older sequence event. It also 
 
 | Seed | Accepted | Rejected | Gaps | Duplicates | Older | Scoreboard matches | Result |
 | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- |
-| 20260730 | 28 | 12 | 5 | 3 | 5 | 96 | Pass |
-| 20260731 | 31 | 9 | 4 | 6 | 5 | 102 | Pass |
+| 20260730 | 27 | 13 | 6 | 7 | 3 | 94 | Pass |
+| 20260731 | 32 | 8 | 5 | 2 | 4 | 104 | Pass |
 
-## Recorded XSim result
+## Recorded XSim baseline
 
-The `tb_feed_handler_uvm` run completed at 2604 ns. The scoreboard matched 13 payload, message, rejection and sequence results. The UVM report contained zero warnings, errors and fatals.
+The deterministic smoke regression completed at 2604 ns. The scoreboard matched 13 payload, message, rejection and sequence results. The UVM report contained zero warnings, errors and fatals.
 
-The constrained-random runs use the separate `tb_feed_handler_uvm_random` simulation top. Both recorded seeds completed with zero UVM warnings, errors and fatals.
+Both recorded constrained-random seeds completed with zero UVM warnings, errors and fatals. A repeated project-mode run of seed `20260730` reproduced the same completion time, counters and scoreboard total. The smoke and random tests share `feed_handler_tb_top`; test selection does not introduce another HDL wrapper or a second UVM environment.

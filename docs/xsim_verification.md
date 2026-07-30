@@ -9,8 +9,8 @@
 | Clock period | 8 ns |
 | Design under test | `udp_feed_handler_top` and focused receive-path modules |
 | Integrated directed top | `tb_feed_handler_basic` |
-| UVM top | `tb_feed_handler_uvm` |
-| Constrained-random top | `tb_feed_handler_uvm_random` |
+| UVM simulation top | `feed_handler_tb_top` |
+| UVM tests | `feed_handler_smoke_test`, `feed_handler_random_test` |
 | UVM library | UVM 1.2 supplied with Vivado |
 
 The checked-in Tcl files define the project source list and selectable simulation tops. Generated Vivado project data and simulator working files are excluded from version control.
@@ -65,12 +65,14 @@ The run completed at 2604 ns with:
 - 1 destination-port rejection
 - 1 sequence gap representing 2 missing messages
 
-The constrained-random top completed two recorded seeds with zero UVM warnings, errors or fatals:
+The constrained-random test completed two recorded seeds with zero UVM warnings, errors or fatals:
 
 | Seed | Completion time | Accepted | Rejected | Sequence events: gap / duplicate / older | Scoreboard matches |
 | ---: | ---: | ---: | ---: | ---: | ---: |
-| 20260730 | 34540 ns | 28 | 12 | 5 / 3 / 5 | 96 |
-| 20260731 | 33788 ns | 31 | 9 | 4 / 6 / 5 | 102 |
+| 20260730 | 32284 ns | 27 | 13 | 6 / 7 / 3 | 94 |
+| 20260731 | 35980 ns | 32 | 8 | 5 / 2 / 4 | 104 |
+
+Repeating seed `20260730` through the generated Vivado project produced the same completion time, counters and scoreboard total.
 
 ## Evidence boundary
 
