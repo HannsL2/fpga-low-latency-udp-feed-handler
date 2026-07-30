@@ -21,3 +21,5 @@
 - Added gap counts, duplicate detection, out-of-order detection and wraparound handling.
 - Added wrapping packet, rejection, message and sequence statistics.
 - Added dedicated counters for protocol and destination-filter rejection categories.
+- Expanded the integrated directed test to cover acceptance, rejection, sequence gaps and final statistics.
+- Added end-to-end payload ordering and backpressure-stability checks.
