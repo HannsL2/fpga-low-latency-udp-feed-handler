@@ -30,6 +30,9 @@ set rtl_files [list \
 
 set simulation_files [list \
     [file join $repo_root assertions feed_handler_protocol_assertions.sv] \
+    [file join $repo_root tb uvm feed_handler_if.sv] \
+    [file join $repo_root tb uvm feed_handler_uvm_pkg.sv] \
+    [file join $repo_root tb uvm tb_feed_handler_uvm.sv] \
     [file join $repo_root tb basic tb_ethernet_parser.sv] \
     [file join $repo_root tb basic tb_ipv4_parser.sv] \
     [file join $repo_root tb basic tb_udp_filter.sv] \
@@ -43,6 +46,7 @@ add_files -norecurse -fileset sim_1 $simulation_files
 
 set_property file_type SystemVerilog [get_files $rtl_files]
 set_property file_type SystemVerilog [get_files $simulation_files]
+set_property include_dirs [list [file join $repo_root tb uvm]] [get_filesets sim_1]
 set_property top udp_feed_handler_top [get_filesets sources_1]
 set_property top tb_feed_handler_basic [get_filesets sim_1]
 set_property xsim.simulate.runtime 5us [get_filesets sim_1]
