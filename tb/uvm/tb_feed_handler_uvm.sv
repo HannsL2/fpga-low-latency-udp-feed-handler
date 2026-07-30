@@ -1,6 +1,8 @@
 `timescale 1ns/1ps
 
-module tb_feed_handler_uvm;
+module tb_feed_handler_uvm #(
+    parameter string DEFAULT_TEST_NAME = "feed_handler_smoke_test"
+);
     import uvm_pkg::*;
     import feed_handler_uvm_pkg::*;
 
@@ -61,7 +63,7 @@ module tb_feed_handler_uvm;
         vif.s_last = 1'b0;
         vif.m_payload_ready = 1'b1;
         uvm_config_db#(virtual feed_handler_if)::set(null, "uvm_test_top*", "vif", vif);
-        run_test("feed_handler_smoke_test");
+        run_test(DEFAULT_TEST_NAME);
     end
 
     initial begin

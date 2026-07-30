@@ -33,6 +33,7 @@ set simulation_files [list \
     [file join $repo_root tb uvm feed_handler_if.sv] \
     [file join $repo_root tb uvm feed_handler_uvm_pkg.sv] \
     [file join $repo_root tb uvm tb_feed_handler_uvm.sv] \
+    [file join $repo_root tb uvm tb_feed_handler_uvm_random.sv] \
     [file join $repo_root tb basic tb_ethernet_parser.sv] \
     [file join $repo_root tb basic tb_ipv4_parser.sv] \
     [file join $repo_root tb basic tb_udp_filter.sv] \
