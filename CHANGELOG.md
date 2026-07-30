@@ -27,3 +27,6 @@
 - Added the assertion source to the generated Vivado simulation fileset.
 - Reworked the README around stable implemented capabilities and verification results.
 - Added a Vivado GUI simulation and waveform-debugging guide.
+- Added a UVM 1.2 packet driver, passive monitors, reference scoreboard and functional coverage.
+- Added a five-packet UVM smoke scenario covering all message types, rejection, backpressure and sequence gaps.
+- Added the UVM testbench to the generated Vivado project and selectable simulation tops.

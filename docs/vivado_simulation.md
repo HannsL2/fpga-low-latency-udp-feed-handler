@@ -13,10 +13,10 @@ Open `build/vivado/feed_handler.xpr` in Vivado. The generated project contains t
 ## Run a test in the graphical interface
 
 1. In the Sources window, select **Simulation Sources**.
-2. Right-click the required testbench and choose **Set as Top**. Use `tb_feed_handler_basic` for the integrated receive-path test.
+2. Right-click the required testbench and choose **Set as Top**. Use `tb_feed_handler_basic` for the directed integrated test or `tb_feed_handler_uvm` for the UVM driver, monitors, scoreboard and coverage environment.
 3. In the Flow Navigator, select **Run Simulation**, then **Run Behavioral Simulation**.
 4. When XSim opens, select **Run All**. The directed testbench ends the run with `$finish`.
-5. Check the Tcl Console for the test's `PASS` message. An assertion or testbench failure stops the run with a diagnostic identifying the violated rule.
+5. Check the Tcl Console for the directed test's `PASS` message or the UVM report summary. An assertion, scoreboard or testbench failure stops the run with a diagnostic identifying the violated rule.
 
 A focused test can also be run in batch mode:
 
