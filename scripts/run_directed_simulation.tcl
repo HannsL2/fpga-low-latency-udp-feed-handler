@@ -8,7 +8,7 @@ set testbench [lindex $argv 0]
 set supported_testbenches [list tb_ethernet_parser tb_ipv4_parser tb_udp_filter tb_market_message_decoder tb_sequence_checker tb_statistics_counters tb_feed_handler_basic]
 
 if {[lsearch -exact $supported_testbenches $testbench] < 0} {
-    error "Unsupported testbench '$testbench'. Choose tb_ethernet_parser, tb_ipv4_parser, tb_udp_filter or tb_feed_handler_basic."
+    error "Unsupported testbench '$testbench'. Choose one of: [join $supported_testbenches {, }]."
 }
 
 set script_dir  [file dirname [file normalize [info script]]]

@@ -29,6 +29,7 @@ set rtl_files [list \
     [file join $repo_root rtl udp_feed_handler_top.sv]]
 
 set simulation_files [list \
+    [file join $repo_root assertions feed_handler_protocol_assertions.sv] \
     [file join $repo_root tb basic tb_ethernet_parser.sv] \
     [file join $repo_root tb basic tb_ipv4_parser.sv] \
     [file join $repo_root tb basic tb_udp_filter.sv] \
