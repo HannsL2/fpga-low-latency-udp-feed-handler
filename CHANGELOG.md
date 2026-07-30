@@ -17,3 +17,5 @@
 - Added cut-through payload forwarding with output backpressure.
 - Added fixed-format market-message decoding for all four supported message types.
 - Added protocol, type and payload-length validation.
+- Added sequence initialization, progression and anomaly classification.
+- Added gap counts, duplicate detection, out-of-order detection and wraparound handling.

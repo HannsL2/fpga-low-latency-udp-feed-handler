@@ -21,7 +21,7 @@ flowchart LR
     I --> J
 ```
 
-Each block has a narrow responsibility. The parsers recover protocol fields, the filter decides whether the packet belongs to the configured feed, and the decoder interprets the accepted payload. Sequence checking occurs only after a complete message has passed all validation checks.
+Each block has a narrow responsibility. The parsers recover protocol fields, the filter decides whether the packet belongs to the configured feed, and the decoder interprets the accepted payload. The sequence checker consumes only `message_valid` events, after a complete message has passed all validation checks.
 
 ## Cut-through processing
 

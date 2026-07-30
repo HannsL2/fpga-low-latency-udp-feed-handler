@@ -24,6 +24,8 @@ The UDP length must equal the IPv4 total length minus the fixed IPv4 header size
 
 Only complete messages that pass the protocol and destination checks may update the sequence tracker. Otherwise, malformed traffic or packets for another destination could corrupt the expected sequence number.
 
+Sequence ordering uses modulo-2^32 subtraction and a half-range comparison. This handles natural wraparound while giving deterministic treatment to values that could otherwise be interpreted as either far ahead or far behind.
+
 ## Verification toolchain
 
 Vivado and XSim 2026.1 are the reference tools. Reported behavior and measurements come from commands executed against the checked-in source; unavailable or unverified results are not estimated.
