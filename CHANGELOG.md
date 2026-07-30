@@ -25,3 +25,5 @@
 - Added end-to-end payload ordering and backpressure-stability checks.
 - Added bound protocol assertions for stream handshakes, receive events and sequence classifications.
 - Added the assertion source to the generated Vivado simulation fileset.
+- Reworked the README around stable implemented capabilities and verification results.
+- Added a Vivado GUI simulation and waveform-debugging guide.

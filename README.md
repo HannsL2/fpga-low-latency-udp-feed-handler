@@ -63,22 +63,9 @@ AMD Vivado and Vivado XSim 2026.1 are the reference tools. Verification is built
 
 The representative implementation target is the Artix-7 `xc7a35tcpg236-1` with an 8 ns clock constraint. Timing, utilisation and latency figures will be added only after they have been produced by the checked-in Vivado flow.
 
-### Opening the design in Vivado
+### Simulation
 
-Run the following commands from the repository root in a shell where `vivado` is available:
-
-```powershell
-vivado -mode batch -nojournal -nolog -source scripts/create_vivado_project.tcl
-vivado build/vivado/feed_handler.xpr
-```
-
-The project includes the directed Ethernet, IPv4 and UDP/filter tests as simulation sources. A focused test can also be run without opening the graphical interface:
-
-```powershell
-vivado -mode batch -nojournal -nolog -source scripts/run_directed_simulation.tcl -tclargs tb_udp_filter
-```
-
-Generated project and simulation data remain under `build/` and are not tracked by Git.
+The checked-in Tcl scripts recreate the Vivado project and run individual XSim testbenches. Generated project and simulation data remain under `build/` and are not tracked by Git. See the [Vivado simulation guide](docs/vivado_simulation.md) for the command-line flow, graphical workflow and recommended waveform signals.
 
 ## Repository structure
 
@@ -94,8 +81,17 @@ Generated project and simulation data remain under `build/` and are not tracked 
 | `reports/` | Selected simulation and implementation results |
 | `waveforms/` | Waveform configurations and review evidence |
 
-## Current status
+## Implemented capabilities
 
-The checked-in receive path includes packet control, Ethernet and fixed-header IPv4 parsing, UDP header extraction, configurable destination filtering, backpressure-safe payload forwarding, fixed-format message decoding, sequence tracking and event-driven statistics. Seven directed XSim tests cover individual blocks and an integrated four-packet scenario with acceptance, rejection, output backpressure, sequence progression, a forward gap and final counter checks. Bound protocol assertions continuously check stream stability, event consistency and sequence classification during simulation.
+- cut-through Ethernet II, fixed-header IPv4 and UDP parsing
+- configurable destination MAC, IPv4 address and UDP port filtering
+- backpressure-safe UDP payload forwarding
+- fixed-format market-message decoding
+- sequence progression, gap, duplicate and out-of-order classification
+- event-driven packet, rejection, message and sequence statistics
 
-See [the design specification](docs/project_specification.md), [architecture notes](docs/architecture.md), [directed-verification notes](docs/directed_verification.md), [protocol-assertion notes](docs/assertions.md), [Ethernet parser notes](docs/ethernet_parser.md), [IPv4 parser notes](docs/ipv4_parser.md), [UDP/filter notes](docs/udp_filter.md), [message-decoder notes](docs/market_message_decoder.md), [sequence-checker notes](docs/sequence_checker.md), [statistics notes](docs/statistics.md) and [protocol reference](docs/protocol.md) for the detailed interface and byte layout.
+## Verification
+
+Seven directed XSim tests cover individual blocks and an integrated four-packet scenario with acceptance, rejection, output backpressure, sequence progression, a forward gap and final counter checks. Bound protocol assertions continuously check stream stability, event consistency and sequence classification during simulation.
+
+See [the design specification](docs/project_specification.md), [architecture notes](docs/architecture.md), [directed-verification notes](docs/directed_verification.md), [protocol-assertion notes](docs/assertions.md), [Ethernet parser notes](docs/ethernet_parser.md), [IPv4 parser notes](docs/ipv4_parser.md), [UDP/filter notes](docs/udp_filter.md), [message-decoder notes](docs/market_message_decoder.md), [sequence-checker notes](docs/sequence_checker.md), [statistics notes](docs/statistics.md) and [protocol reference](docs/protocol.md) for detailed design information.
