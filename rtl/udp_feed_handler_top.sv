@@ -36,7 +36,18 @@ module udp_feed_handler_top #(
 
     output logic [31:0] total_packet_count,
     output logic [31:0] accepted_packet_count,
-    output logic [31:0] rejected_packet_count
+    output logic [31:0] rejected_packet_count,
+    output logic [31:0] malformed_packet_count,
+    output logic [31:0] unsupported_ethertype_count,
+    output logic [31:0] non_udp_packet_count,
+    output logic [31:0] destination_mac_mismatch_count,
+    output logic [31:0] destination_ip_mismatch_count,
+    output logic [31:0] destination_port_mismatch_count,
+    output logic [31:0] valid_message_count,
+    output logic [31:0] sequence_gap_count,
+    output logic [31:0] missing_message_total,
+    output logic [31:0] duplicate_message_count,
+    output logic [31:0] out_of_order_message_count
 );
 
     logic        input_transfer;
@@ -220,6 +231,34 @@ module udp_feed_handler_top #(
         .missing_message_count
     );
 
+    statistics_counters statistics (
+        .clk,
+        .reset,
+        .packet_end,
+        .reject_valid,
+        .reject_reason,
+        .message_valid,
+        .sequence_event_valid,
+        .sequence_gap,
+        .sequence_duplicate,
+        .sequence_out_of_order,
+        .missing_message_count,
+        .total_packet_count,
+        .accepted_packet_count,
+        .rejected_packet_count,
+        .malformed_packet_count,
+        .unsupported_ethertype_count,
+        .non_udp_packet_count,
+        .destination_mac_mismatch_count,
+        .destination_ip_mismatch_count,
+        .destination_port_mismatch_count,
+        .valid_message_count,
+        .sequence_gap_count,
+        .missing_message_total,
+        .duplicate_message_count,
+        .out_of_order_message_count
+    );
+
     // Payload decoding and sequence tracking are connected after the packet
     // has passed the header checks and destination filter.
     always_comb begin
@@ -239,9 +278,6 @@ module udp_feed_handler_top #(
         end else begin
             reject_reason = feed_handler_pkg::REJECT_NONE;
         end
-        total_packet_count = 32'h0000_0000;
-        accepted_packet_count = 32'h0000_0000;
-        rejected_packet_count = 32'h0000_0000;
     end
 
 endmodule
