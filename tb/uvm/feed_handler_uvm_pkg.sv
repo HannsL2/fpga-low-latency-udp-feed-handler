@@ -3,7 +3,7 @@ package feed_handler_uvm_pkg;
     import feed_handler_pkg::*;
     `include "uvm_macros.svh"
 
-    typedef enum int unsigned {
+    typedef enum bit [1:0] {
         RESULT_PAYLOAD,
         RESULT_MESSAGE,
         RESULT_REJECT,
