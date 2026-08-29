@@ -15,13 +15,17 @@
 
 The checked-in Tcl files define the project source list and selectable simulation tops. Generated Vivado project data and simulator working files are excluded from version control.
 
+The complete regression was run from the final A7-LITE Vivado project with `scripts/run_regression.tcl`. Each test starts from clean generated simulator state, and the full-path assertion binds are enabled only for tops that elaborate the complete receive pipeline. All 12 runs passed: nine directed tests, the deterministic UVM smoke test and two constrained-random tests with fixed seeds.
+
 ## Verification layers
 
 | Layer | Purpose | Recorded evidence |
 | --- | --- | --- |
 | Focused directed tests | Isolate parser, decoder, sequence and statistics behavior | Six passing XSim tests |
 | Integrated directed test | Exercise the complete receive path across accepted and rejected packets | Four packets, three accepted messages, one rejection and one sequence gap |
-| Protocol assertions | Continuously enforce stream and event invariants | No assertion failures across the directed and UVM runs |
+| Latency test | Measure cycle distance between input, payload and decoded-result events | 1-cycle cut-through and final-byte latency at 125 MHz |
+| Board image test | Exercise the MMCM, deterministic replay and pass/fail logic | A7-LITE validation image completed at 2178 ns |
+| Protocol assertions | Continuously enforce stream and event invariants | No assertion failures in the integrated, latency, board-image or UVM runs |
 | UVM environment | Separate stimulus, monitoring, reference prediction, comparison and coverage | Deterministic smoke test and two passing 40-packet random seeds |
 
 ## Directed XSim results
@@ -35,12 +39,14 @@ The checked-in Tcl files define the project source list and selectable simulatio
 | `tb_sequence_checker` | Normal progression, gaps, duplicates, older messages and wraparound | 344 ns | Pass |
 | `tb_statistics_counters` | Packet, rejection, message and sequence counters | 344 ns | Pass |
 | `tb_feed_handler_basic` | Integrated acceptance, rejection, backpressure, sequencing and statistics | 2012 ns | Pass |
+| `tb_feed_handler_latency` | Cycle-accurate cut-through and decoded-message latency | 524 ns | Pass |
+| `tb_a7_lite_self_test` | 50-to-125 MHz clock generation, packet replay and LED result logic | 2178 ns | Pass |
 
 The integrated test transfers 48 accepted payload bytes from three messages. A fourth packet is rejected for a destination-port mismatch and does not update sequence state. The following accepted sequence produces expected sequence 3, received sequence 5 and a missing-message count of 2.
 
 ## Assertion scope
 
-The simulation binds assertions to the payload router, sequence checker and top-level event interface. The checked properties cover:
+The full-path simulations bind assertions to the payload router, sequence checker and top-level event interface. Focused module tests rely on their dedicated self-checking testbenches, while the integrated, latency, board-image and UVM tests enable the complete bind set. The checked properties cover:
 
 - input and output stability while stalled
 - valid/last consistency on the payload interface
@@ -74,6 +80,12 @@ The constrained-random test completed two recorded seeds with zero UVM warnings,
 
 Repeating seed `20260730` through the generated Vivado project produced the same completion time, counters and scoreboard total.
 
-## Evidence boundary
+## Final regression summary
 
-These results are behavioral simulation evidence. They do not represent post-synthesis timing, implemented resource utilisation or physical-board measurements.
+| Runs | Passed | Failed | UVM warnings | UVM errors | UVM fatals |
+| ---: | ---: | ---: | ---: | ---: | ---: |
+| 12 | 12 | 0 | 0 | 0 | 0 |
+
+## Evidence scope
+
+These results are behavioral simulation evidence. Post-route timing, utilisation and bitstream evidence is recorded separately in the [A7-LITE implementation results](implementation_results.md).

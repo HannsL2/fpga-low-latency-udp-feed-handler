@@ -24,8 +24,8 @@ The test independently checks:
 - one destination-port mismatch and one sequence-gap event
 - zero unexpected malformed, protocol, destination or ordering counters
 
-The focused Ethernet, IPv4, UDP/filter, message-decoder, sequence-checker and statistics tests are run alongside the integrated scenario. All seven directed tests pass with Vivado XSim 2026.1 without compile or elaboration warnings.
+The focused Ethernet, IPv4, UDP/filter, message-decoder, sequence-checker and statistics tests run alongside the integrated scenario, latency measurement and A7-LITE validation image. All nine directed tests pass with Vivado XSim 2026.1.
 
 ## Scope
 
-These directed tests provide fast deterministic RTL feedback and straightforward waveform debugging. Broader constrained-random stimulus, independent reference modeling, functional coverage and assertions remain outside the scope of this suite and can be added as a separate verification environment.
+The directed suite provides deterministic RTL checks and cycle-level timing measurements. The separate UVM environment adds constrained-random stimulus, independent reference modelling, functional coverage and reproducible seeds; bound assertions run across both verification layers.

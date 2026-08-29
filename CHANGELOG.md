@@ -33,3 +33,9 @@
 - Added a 40-packet constrained-random UVM regression with reproducible seed results.
 - Added weighted destination, sequence, timing and message-field randomization.
 - Refactored the UVM environment into modular class files with a named sequencer and input agent.
+- Added the MicroPhase A7-LITE ES1 target, board constraints and 50-to-125 MHz clock generation.
+- Added a deterministic on-board packet replay with latched pass/fail LED results.
+- Added cycle-accurate latency verification at 125 MHz.
+- Added warning-clean synthesis, implementation, timing and utilisation evidence for XC7A35T FGG484.
+- Added a single-command Vivado regression covering nine directed runs, the UVM smoke test and two reproducible random seeds.
+- Isolated generated XSim state and assertion scope between regression test tops.

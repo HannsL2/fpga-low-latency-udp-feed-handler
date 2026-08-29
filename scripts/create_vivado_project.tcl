@@ -11,7 +11,7 @@ if {$argc >= 1} {
 
 file mkdir $project_dir
 
-create_project feed_handler $project_dir -part xc7a35tcpg236-1 -force
+create_project feed_handler $project_dir -part xc7a35tfgg484-2 -force
 set_property target_language Verilog [current_project]
 set_property simulator_language Mixed [current_project]
 
@@ -26,7 +26,8 @@ set rtl_files [list \
     [file join $repo_root rtl market_message_decoder.sv] \
     [file join $repo_root rtl sequence_checker.sv] \
     [file join $repo_root rtl statistics_counters.sv] \
-    [file join $repo_root rtl udp_feed_handler_top.sv]]
+    [file join $repo_root rtl udp_feed_handler_top.sv] \
+    [file join $repo_root rtl board a7_lite_self_test_top.sv]]
 
 set simulation_files [list \
     [file join $repo_root assertions feed_handler_protocol_assertions.sv] \
@@ -39,7 +40,9 @@ set simulation_files [list \
     [file join $repo_root tb basic tb_market_message_decoder.sv] \
     [file join $repo_root tb basic tb_sequence_checker.sv] \
     [file join $repo_root tb basic tb_statistics_counters.sv] \
-    [file join $repo_root tb basic tb_feed_handler_basic.sv]]
+    [file join $repo_root tb basic tb_feed_handler_basic.sv] \
+    [file join $repo_root tb basic tb_feed_handler_latency.sv] \
+    [file join $repo_root tb basic tb_a7_lite_self_test.sv]]
 
 add_files -norecurse -fileset sources_1 $rtl_files
 add_files -norecurse -fileset sim_1 $simulation_files

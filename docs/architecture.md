@@ -54,3 +54,9 @@ The receive path stores individual fields rather than a full packet. A one-byte 
 | 44-47 | Sequence number |
 
 The fixed 20-byte IPv4 header places the UDP header at byte 34 and the payload at byte 42. Variable-length IPv4 headers are rejected so these positions remain deterministic.
+
+## A7-LITE validation top
+
+The board-specific top sits outside the reusable receive pipeline. It generates 125 MHz from the A7-LITE's 50 MHz oscillator, synchronizes reset, replays one known packet and checks the decoded fields and counters. Active-low user LEDs retain the final pass or fail result.
+
+The validation top feeds the same byte-stream interface used by the directed and UVM environments. It does not bypass or replace any parser, filter, decoder, sequence or statistics block.

@@ -5,7 +5,7 @@ if {$argc < 1 || $argc > 3} {
 }
 
 set testbench [lindex $argv 0]
-set supported_testbenches [list tb_ethernet_parser tb_ipv4_parser tb_udp_filter tb_market_message_decoder tb_sequence_checker tb_statistics_counters tb_feed_handler_basic tb_feed_handler_uvm tb_feed_handler_uvm_random feed_handler_tb_top feed_handler_smoke_test feed_handler_random_test]
+set supported_testbenches [list tb_ethernet_parser tb_ipv4_parser tb_udp_filter tb_market_message_decoder tb_sequence_checker tb_statistics_counters tb_feed_handler_basic tb_feed_handler_latency tb_a7_lite_self_test tb_feed_handler_uvm tb_feed_handler_uvm_random feed_handler_tb_top feed_handler_smoke_test feed_handler_random_test]
 
 if {[lsearch -exact $supported_testbenches $testbench] < 0} {
     error "Unsupported testbench '$testbench'. Choose one of: [join $supported_testbenches {, }]."

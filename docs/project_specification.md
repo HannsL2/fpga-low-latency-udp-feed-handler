@@ -60,8 +60,8 @@ Directed XSim tests cover fast RTL bring-up. The UVM 1.2 environment provides co
 
 ## Implementation target
 
-Vivado synthesis and implementation use `xc7a35tcpg236-1` as a representative Artix-7 target. The project reports simulated, synthesized, implemented and physically tested results separately; the representative part does not imply board-level testing.
+Vivado synthesis and implementation use `xc7a35tfgg484-2`, matching the Artix-7 device on the MicroPhase A7-LITE ES1. The board top generates the 125 MHz processing clock from the 50 MHz oscillator and exposes latched pass/fail results on the user LEDs.
 
 ## Design boundary
 
-The repository covers the receive-side packet-processing pipeline. Ethernet MAC/PHY functions, preamble and FCS handling, ARP, TCP, IPv6, IP reassembly, PCIe, DMA and physical board I/O are outside this boundary.
+The repository covers the receive-side packet-processing pipeline plus a board-level clock/reset and deterministic validation wrapper. Ethernet MAC/PHY functions, RGMII conversion, preamble and FCS handling, ARP, TCP, IPv6, IP reassembly, PCIe and DMA are outside this boundary.

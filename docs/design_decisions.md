@@ -30,6 +30,6 @@ Sequence ordering uses modulo-2^32 subtraction and a half-range comparison. This
 
 Vivado and XSim 2026.1 are the reference tools. Reported behavior and measurements come from commands executed against the checked-in source; unavailable or unverified results are not estimated.
 
-## Representative FPGA target
+## FPGA target
 
-Implementation uses `xc7a35tcpg236-1`, which is available in the installed Vivado part database. It provides a consistent Artix-7 target for timing and utilisation comparisons without tying the receive pipeline to a particular development board.
+Implementation uses `xc7a35tfgg484-2`, matching the XC7A35T FGG484 device fitted to the MicroPhase A7-LITE ES1. The board's 50 MHz oscillator is converted to the 125 MHz processing clock with an MMCM. Board-specific clock, reset and LED logic is kept in a separate top so the packet-processing interface remains reusable.
