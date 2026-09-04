@@ -35,6 +35,18 @@ The routed design has no failed or partially routed nets, and the implementation
 
 The generated [A7-LITE programming image](../reports/a7_lite/a7_lite_self_test.bit) has SHA-256 `B6C2AD24750F75E49E78851D20AE84268C0FF882E1C1871538A8A42CCD54E3F2`.
 
+## Physical validation
+
+The generated image was loaded into the A7-LITE through its on-board Digilent JTAG interface. Vivado detected the expected `xc7a35t_0` device, completed `program_hw_devices` and reported `End of startup status: HIGH`.
+
+![Vivado Hardware Manager after programming](images/hardware/vivado_hardware_manager_programmed.jpg)
+
+On the board, D6 (`LED1`, FPGA pin M18) latched the pass result while D5 (`LED2`, FPGA pin N18) remained clear. Pressing and releasing K3 reset the design; the packet replay completed again with the same stable pass indication.
+
+![A7-LITE board showing the self-test pass indication](images/hardware/a7_lite_self_test_pass.jpg)
+
+This run confirms JTAG configuration, the 50 MHz board clock, MMCM-generated 125 MHz processing clock, reset release, packet replay, field decoding and final counter checks on the physical device. It does not exercise the RTL8211E Ethernet PHY or an RGMII MAC.
+
 ## Latency
 
 Latency is measured with an unstalled 58-byte Ethernet/IPv4/UDP frame at 125 MHz.
@@ -47,7 +59,7 @@ Latency is measured with an unstalled 58-byte Ethernet/IPv4/UDP frame at 125 MHz
 
 The first two figures describe the processing latency once the required byte is present. The frame-start figure also includes the serial arrival time of the remaining bytes on the 8-bit interface.
 
-## Board validation image
+## On-board self-test
 
 `a7_lite_self_test_top` replays one known Add Order packet through `udp_feed_handler_top`. It checks every decoded field and the final packet, message and sequence counters. LED1 latches the pass result; LED2 latches a rejection, data mismatch or timeout.
 

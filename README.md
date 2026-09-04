@@ -77,6 +77,12 @@ The board-specific image targets a MicroPhase A7-LITE ES1. Its 50 MHz oscillator
 
 The board wrapper validates the packet-processing core and its implemented clock path. The RTL8211E PHY and Ethernet MAC remain outside the core boundary described below.
 
+### Physical validation
+
+![A7-LITE self-test pass result](docs/images/hardware/a7_lite_self_test_pass.jpg)
+
+The implemented image was programmed into the board's XC7A35T through the on-board JTAG interface. Vivado reported a successful FPGA startup, and the self-test completed with the pass LED asserted and the fail LED clear. Releasing the board reset reran the test and returned the same result.
+
 ## Verification and implementation
 
 AMD Vivado and Vivado XSim 2026.1 are the reference tools. Verification is built around:
@@ -118,7 +124,7 @@ Vivado XSim 2026.1 is the reference simulator. Checked-in Tcl captures the sourc
 
 ## Verification
 
-The final A7-LITE Vivado project passes a 12-run XSim regression: nine directed tests, the deterministic UVM smoke test and two reproducible constrained-random seeds. The directed set covers individual blocks, an integrated four-packet scenario, cycle-accurate latency and the board validation image. Bound protocol assertions continuously check stream stability, event consistency and sequence classification during simulation.
+The final A7-LITE Vivado project passes a 12-run XSim regression: nine directed tests, the deterministic UVM smoke test and two reproducible constrained-random seeds. The directed set covers individual blocks, an integrated four-packet scenario, cycle-accurate latency and the board validation image. Bound protocol assertions continuously check stream stability, event consistency and sequence classification during simulation. The implemented self-test was also programmed and exercised on the physical XC7A35T board.
 
 The UVM 1.2 environment uses a conventional input agent containing a named sequencer, handshake-aware driver and passive input monitor. The output monitor, independent reference scoreboard and functional coverage remain directly under the environment. A deterministic smoke scenario exercises all supported message types, while a 40-packet constrained-random regression varies message fields, destination outcomes, sequence classifications, input gaps and output backpressure.
 

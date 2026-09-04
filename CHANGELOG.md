@@ -39,3 +39,4 @@
 - Added warning-clean synthesis, implementation, timing and utilisation evidence for XC7A35T FGG484.
 - Added a single-command Vivado regression covering nine directed runs, the UVM smoke test and two reproducible random seeds.
 - Isolated generated XSim state and assertion scope between regression test tops.
+- Validated the implemented self-test on the physical A7-LITE XC7A35T through JTAG and recorded the pass indication.
