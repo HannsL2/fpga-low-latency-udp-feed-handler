@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 1.0.0 - 2026-09-04
+
 - Established the repository layout and Vivado/XSim tool flow.
 - Defined the streaming interface, packet format and receive-path architecture.
 - Added the shared SystemVerilog package and top-level interface.
