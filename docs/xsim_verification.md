@@ -15,7 +15,7 @@
 
 The checked-in Tcl files define the project source list and selectable simulation tops. Generated Vivado project data and simulator working files are excluded from version control.
 
-The complete regression was run from the final A7-LITE Vivado project with `scripts/run_regression.tcl`. Each test starts from clean generated simulator state, and the full-path assertion binds are enabled only for tops that elaborate the complete receive pipeline. All 12 runs passed: nine directed tests, the deterministic UVM smoke test and two constrained-random tests with fixed seeds.
+The complete regression was run from the final A7-LITE Vivado project with `scripts/run_regression.tcl`. Each test starts from clean generated simulator state, and the full-path assertion binds are enabled only for tops that elaborate the complete receive pipeline. All 14 runs passed: eleven directed tests, the deterministic UVM smoke test and two constrained-random tests with fixed seeds. The added directed cases cover the RGMII DDR/preamble/FCS boundary and the complete UART text line.
 
 ## Verification layers
 
@@ -25,6 +25,8 @@ The complete regression was run from the final A7-LITE Vivado project with `scri
 | Integrated directed test | Exercise the complete receive path across accepted and rejected packets | Four packets, three accepted messages, one rejection and one sequence gap |
 | Latency test | Measure cycle distance between input, payload and decoded-result events | 1-cycle cut-through and final-byte latency at 125 MHz |
 | Board image test | Exercise the MMCM, deterministic replay and pass/fail logic | A7-LITE validation image completed at 2178 ns |
+| RGMII boundary test | Reconstruct bytes from DDR nibbles and remove PHY framing | Preamble/SFD recognised, four FCS bytes removed and message decoded |
+| UART output test | Reconstruct and compare the serial report | Complete 64-byte line with valid 8-N-1 framing |
 | Protocol assertions | Continuously enforce stream and event invariants | No assertion failures in the integrated, latency, board-image or UVM runs |
 | UVM environment | Separate stimulus, monitoring, reference prediction, comparison and coverage | Deterministic smoke test and two passing 40-packet random seeds |
 
@@ -41,6 +43,8 @@ The complete regression was run from the final A7-LITE Vivado project with `scri
 | `tb_feed_handler_basic` | Integrated acceptance, rejection, backpressure, sequencing and statistics | 2012 ns | Pass |
 | `tb_feed_handler_latency` | Cycle-accurate cut-through and decoded-message latency | 524 ns | Pass |
 | `tb_a7_lite_self_test` | 50-to-125 MHz clock generation, packet replay and LED result logic | 2178 ns | Pass |
+| `tb_rgmii_live_receive` | RGMII DDR capture, preamble/SFD recognition, FCS removal and UDP decoding | 916 ns | Pass |
+| `tb_feed_message_uart` | Decoded-message text and 8-N-1 serial framing | 64645 ns | Pass |
 
 The integrated test transfers 48 accepted payload bytes from three messages. A fourth packet is rejected for a destination-port mismatch and does not update sequence state. The following accepted sequence produces expected sequence 3, received sequence 5 and a missing-message count of 2.
 
@@ -84,7 +88,7 @@ Repeating seed `20260730` through the generated Vivado project produced the same
 
 | Runs | Passed | Failed | UVM warnings | UVM errors | UVM fatals |
 | ---: | ---: | ---: | ---: | ---: | ---: |
-| 12 | 12 | 0 | 0 | 0 | 0 |
+| 14 | 14 | 0 | 0 | 0 | 0 |
 
 ## Evidence scope
 

@@ -16,6 +16,8 @@
 *.srcs/
 xsim.dir/
 work/
+__pycache__/
+*.pyc
 
 # Editor and operating-system files
 .vscode/

@@ -83,6 +83,19 @@ The board wrapper validates the packet-processing core and its implemented clock
 
 The implemented image was programmed into the board's XC7A35T through the on-board JTAG interface. Vivado reported a successful FPGA startup, and the self-test completed with the pass LED asserted and the fail LED clear. Releasing the board reset reran the test and returned the same result.
 
+### Live Ethernet image
+
+A second board image connects the RTL8211E-VB RGMII receive interface to the
+same verified feed-handler core. It captures DDR nibbles, recognises the
+Ethernet preamble and start delimiter, removes the four FCS bytes, and reports
+decoded messages over 115200-8-N-1 UART. The complete image meets its 125 MHz
+receive timing constraint with +0.096 ns setup slack and +0.078 ns hold slack.
+
+The [live Ethernet receive record](docs/live_ethernet.md) describes the board
+clocking, PHY boundary, simulation evidence, host packet generator and current
+limitations. The replacement-board bitstream is built, while physical
+RJ45-to-UART validation remains explicitly pending.
+
 ## Verification and implementation
 
 AMD Vivado and Vivado XSim 2026.1 are the reference tools. Verification is built around:
@@ -124,8 +137,8 @@ Vivado XSim 2026.1 is the reference simulator. Checked-in Tcl captures the sourc
 
 ## Verification
 
-The final A7-LITE Vivado project passes a 12-run XSim regression: nine directed tests, the deterministic UVM smoke test and two reproducible constrained-random seeds. The directed set covers individual blocks, an integrated four-packet scenario, cycle-accurate latency and the board validation image. Bound protocol assertions continuously check stream stability, event consistency and sequence classification during simulation. The implemented self-test was also programmed and exercised on the physical XC7A35T board.
+The final A7-LITE Vivado project passes a 14-run XSim regression: eleven directed tests, the deterministic UVM smoke test and two reproducible constrained-random seeds. The directed set covers individual blocks, an integrated four-packet scenario, cycle-accurate latency, the board validation image, RGMII-to-decoder reception and UART text framing. Bound protocol assertions continuously check stream stability, event consistency and sequence classification during simulation. The implemented self-test was also programmed and exercised on the physical XC7A35T board.
 
 The UVM 1.2 environment uses a conventional input agent containing a named sequencer, handshake-aware driver and passive input monitor. The output monitor, independent reference scoreboard and functional coverage remain directly under the environment. A deterministic smoke scenario exercises all supported message types, while a 40-packet constrained-random regression varies message fields, destination outcomes, sequence classifications, input gaps and output backpressure.
 
-See [the design specification](docs/project_specification.md), [architecture notes](docs/architecture.md), [implementation results](docs/implementation_results.md), [directed-verification notes](docs/directed_verification.md), [UVM verification notes](docs/uvm_verification.md), [protocol-assertion notes](docs/assertions.md), [Ethernet parser notes](docs/ethernet_parser.md), [IPv4 parser notes](docs/ipv4_parser.md), [UDP/filter notes](docs/udp_filter.md), [message-decoder notes](docs/market_message_decoder.md), [sequence-checker notes](docs/sequence_checker.md), [statistics notes](docs/statistics.md) and [protocol reference](docs/protocol.md) for detailed design information.
+See [the design specification](docs/project_specification.md), [architecture notes](docs/architecture.md), [implementation results](docs/implementation_results.md), [live Ethernet receive record](docs/live_ethernet.md), [directed-verification notes](docs/directed_verification.md), [UVM verification notes](docs/uvm_verification.md), [protocol-assertion notes](docs/assertions.md), [Ethernet parser notes](docs/ethernet_parser.md), [IPv4 parser notes](docs/ipv4_parser.md), [UDP/filter notes](docs/udp_filter.md), [message-decoder notes](docs/market_message_decoder.md), [sequence-checker notes](docs/sequence_checker.md), [statistics notes](docs/statistics.md) and [protocol reference](docs/protocol.md) for detailed design information.

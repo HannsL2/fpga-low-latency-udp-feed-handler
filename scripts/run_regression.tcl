@@ -22,6 +22,7 @@ proc run_regression_test {label simulation_top xsim_options} {
         tb_feed_handler_basic \
         tb_feed_handler_latency \
         tb_a7_lite_self_test \
+        tb_rgmii_live_receive \
         feed_handler_tb_top]
     set assertions_enabled [expr {
         [lsearch -exact $assertion_tops $simulation_top] >= 0
@@ -53,7 +54,9 @@ foreach directed_test [list \
     tb_statistics_counters \
     tb_feed_handler_basic \
     tb_feed_handler_latency \
-    tb_a7_lite_self_test] {
+    tb_a7_lite_self_test \
+    tb_rgmii_live_receive \
+    tb_feed_message_uart] {
     run_regression_test $directed_test $directed_test {}
 }
 
@@ -64,4 +67,4 @@ run_regression_test "feed_handler_random_test seed 20260731" \
     feed_handler_tb_top {-testplusarg FEED_RANDOM_TEST -sv_seed 20260731}
 
 close_project
-puts "REGRESSION COMPLETE: 12 runs passed."
+puts "REGRESSION COMPLETE: 14 runs passed."

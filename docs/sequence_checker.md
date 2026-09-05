@@ -25,4 +25,4 @@ Ordering uses the modular distance from the expected value. A distance below 2^3
 
 ## Verification
 
-`tb/basic/tb_sequence_checker.sv` covers initialization, normal progression, forward gaps, missing-message counts, duplicates, older messages, ignored cycles without `message_valid`, reset and 32-bit wraparound. The focused test is included in the passing 12-run Vivado XSim regression.
+`tb/basic/tb_sequence_checker.sv` covers initialization, normal progression, forward gaps, missing-message counts, duplicates, older messages, ignored cycles without `message_valid`, reset and 32-bit wraparound. The focused test is included in the passing 14-run Vivado XSim regression.

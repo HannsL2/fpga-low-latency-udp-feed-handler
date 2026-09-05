@@ -24,7 +24,7 @@ The test independently checks:
 - one destination-port mismatch and one sequence-gap event
 - zero unexpected malformed, protocol, destination or ordering counters
 
-The focused Ethernet, IPv4, UDP/filter, message-decoder, sequence-checker and statistics tests run alongside the integrated scenario, latency measurement and A7-LITE validation image. All nine directed tests pass with Vivado XSim 2026.1.
+The focused Ethernet, IPv4, UDP/filter, message-decoder, sequence-checker and statistics tests run alongside the integrated scenario, latency measurement, A7-LITE validation image, RGMII receive path and UART formatter. All eleven directed tests pass with Vivado XSim 2026.1.
 
 ## Scope
 
