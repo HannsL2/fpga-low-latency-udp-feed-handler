@@ -33,7 +33,26 @@ Vivado 2026.1 completed synthesis, placement, routing, DRC and bitstream generat
 
 The routed design has no failed or partially routed nets, and the implementation methodology report contains zero checks. The detailed Vivado outputs are retained as the [timing report](../reports/a7_lite/post_implementation_timing.rpt), [utilisation report](../reports/a7_lite/post_implementation_utilization.rpt), [methodology report](../reports/a7_lite/post_implementation_methodology.rpt) and [clock report](../reports/a7_lite/clock_utilization.rpt). Machine-specific paths and host names are removed from their headers.
 
-The generated [A7-LITE programming image](../reports/a7_lite/a7_lite_self_test.bit) has SHA-256 `B6C2AD24750F75E49E78851D20AE84268C0FF882E1C1871538A8A42CCD54E3F2`.
+Download the generated [A7-LITE programming image](../reports/a7_lite/a7_lite_self_test.bit).
+
+<details>
+<summary>Verify the download (SHA-256 checksum)</summary>
+
+SHA-256 produces a fingerprint of a file, displayed as 64 hexadecimal characters. Compare the downloaded image's checksum with the value below to confirm that it matches the image used for this implementation.
+
+```text
+B6C2AD24750F75E49E78851D20AE84268C0FF882E1C1871538A8A42CCD54E3F2
+```
+
+In PowerShell, run this command from the folder containing the downloaded image:
+
+```powershell
+Get-FileHash .\a7_lite_self_test.bit -Algorithm SHA256
+```
+
+The `Hash` value should match the checksum above (letter case does not matter).
+
+</details>
 
 ## Physical validation
 
