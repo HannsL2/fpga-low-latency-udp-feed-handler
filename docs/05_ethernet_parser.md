@@ -40,7 +40,7 @@ Reset clears the packet controller, captured fields and event outputs. The top l
 
 ## Directed verification
 
-`tb/basic/tb_ethernet_parser.sv` checks:
+`tb/basic/01_tb_ethernet_parser.sv` checks:
 
 - destination and source MAC byte order
 - EtherType byte order

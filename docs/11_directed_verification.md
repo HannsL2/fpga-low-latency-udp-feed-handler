@@ -2,7 +2,7 @@
 
 ## Integrated packet scenario
 
-`tb/basic/tb_feed_handler_basic.sv` provides a readable end-to-end check of the complete RTL receive path. It sends four Ethernet/IPv4/UDP packets in this order:
+`tb/basic/07_tb_feed_handler_basic.sv` provides a readable end-to-end check of the complete RTL receive path. It sends four Ethernet/IPv4/UDP packets in this order:
 
 1. An accepted Add Order with sequence 1.
 2. An accepted Add Order with sequence 2.

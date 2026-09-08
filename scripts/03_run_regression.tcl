@@ -1,5 +1,5 @@
 if {$argc > 1} {
-    error "Usage: vivado -mode batch -source scripts/run_regression.tcl -tclargs ?<project_file>?"
+    error "Usage: vivado -mode batch -source scripts/03_run_regression.tcl -tclargs ?<project_file>?"
 }
 
 set script_dir [file dirname [file normalize [info script]]]

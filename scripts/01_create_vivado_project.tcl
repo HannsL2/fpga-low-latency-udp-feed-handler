@@ -16,33 +16,33 @@ set_property target_language Verilog [current_project]
 set_property simulator_language Mixed [current_project]
 
 set rtl_files [list \
-    [file join $repo_root rtl feed_handler_pkg.sv] \
-    [file join $repo_root rtl stream_packet_controller.sv] \
-    [file join $repo_root rtl ethernet_parser.sv] \
-    [file join $repo_root rtl ipv4_parser.sv] \
-    [file join $repo_root rtl udp_parser.sv] \
-    [file join $repo_root rtl packet_filter.sv] \
-    [file join $repo_root rtl udp_payload_router.sv] \
-    [file join $repo_root rtl market_message_decoder.sv] \
-    [file join $repo_root rtl sequence_checker.sv] \
-    [file join $repo_root rtl statistics_counters.sv] \
-    [file join $repo_root rtl udp_feed_handler_top.sv] \
+    [file join $repo_root rtl 01_feed_handler_pkg.sv] \
+    [file join $repo_root rtl 03_stream_packet_controller.sv] \
+    [file join $repo_root rtl 04_ethernet_parser.sv] \
+    [file join $repo_root rtl 05_ipv4_parser.sv] \
+    [file join $repo_root rtl 06_udp_parser.sv] \
+    [file join $repo_root rtl 07_packet_filter.sv] \
+    [file join $repo_root rtl 08_udp_payload_router.sv] \
+    [file join $repo_root rtl 09_market_message_decoder.sv] \
+    [file join $repo_root rtl 10_sequence_checker.sv] \
+    [file join $repo_root rtl 11_statistics_counters.sv] \
+    [file join $repo_root rtl 02_udp_feed_handler_top.sv] \
     [file join $repo_root rtl board a7_lite_self_test_top.sv]]
 
 set simulation_files [list \
     [file join $repo_root assertions feed_handler_protocol_assertions.sv] \
-    [file join $repo_root tb uvm feed_handler_if.sv] \
-    [file join $repo_root tb uvm feed_handler_uvm_pkg.sv] \
-    [file join $repo_root tb uvm feed_handler_tb_top.sv] \
-    [file join $repo_root tb basic tb_ethernet_parser.sv] \
-    [file join $repo_root tb basic tb_ipv4_parser.sv] \
-    [file join $repo_root tb basic tb_udp_filter.sv] \
-    [file join $repo_root tb basic tb_market_message_decoder.sv] \
-    [file join $repo_root tb basic tb_sequence_checker.sv] \
-    [file join $repo_root tb basic tb_statistics_counters.sv] \
-    [file join $repo_root tb basic tb_feed_handler_basic.sv] \
-    [file join $repo_root tb basic tb_feed_handler_latency.sv] \
-    [file join $repo_root tb basic tb_a7_lite_self_test.sv]]
+    [file join $repo_root tb uvm 01_feed_handler_if.sv] \
+    [file join $repo_root tb uvm 02_feed_handler_uvm_pkg.sv] \
+    [file join $repo_root tb uvm 19_feed_handler_tb_top.sv] \
+    [file join $repo_root tb basic 01_tb_ethernet_parser.sv] \
+    [file join $repo_root tb basic 02_tb_ipv4_parser.sv] \
+    [file join $repo_root tb basic 03_tb_udp_filter.sv] \
+    [file join $repo_root tb basic 04_tb_market_message_decoder.sv] \
+    [file join $repo_root tb basic 05_tb_sequence_checker.sv] \
+    [file join $repo_root tb basic 06_tb_statistics_counters.sv] \
+    [file join $repo_root tb basic 07_tb_feed_handler_basic.sv] \
+    [file join $repo_root tb basic 08_tb_feed_handler_latency.sv] \
+    [file join $repo_root tb basic 09_tb_a7_lite_self_test.sv]]
 
 add_files -norecurse -fileset sources_1 $rtl_files
 add_files -norecurse -fileset sim_1 $simulation_files

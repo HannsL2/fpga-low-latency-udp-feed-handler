@@ -1,7 +1,7 @@
 # Run one directed test from the generated Vivado project.
 
 if {$argc < 1 || $argc > 3} {
-    error "Usage: vivado -mode batch -source scripts/run_directed_simulation.tcl -tclargs <testbench> ?<project_file>? ?<seed>?"
+    error "Usage: vivado -mode batch -source scripts/02_run_directed_simulation.tcl -tclargs <testbench> ?<project_file>? ?<seed>?"
 }
 
 set testbench [lindex $argv 0]
@@ -21,7 +21,7 @@ if {$argc >= 2} {
 }
 
 if {![file exists $project_file]} {
-    error "Vivado project not found. Run scripts/create_vivado_project.tcl first."
+    error "Vivado project not found. Run scripts/01_create_vivado_project.tcl first."
 }
 
 set simulation_top $testbench

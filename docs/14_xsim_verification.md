@@ -15,7 +15,7 @@
 
 The checked-in Tcl files define the project source list and selectable simulation tops. Generated Vivado project data and simulator working files are excluded from version control.
 
-The complete regression was run from the final A7-LITE Vivado project with `scripts/run_regression.tcl`. Each test starts from clean generated simulator state, and the full-path assertion binds are enabled only for tops that elaborate the complete receive pipeline. All 12 runs passed: nine directed tests, the deterministic UVM smoke test and two constrained-random tests with fixed seeds.
+The complete regression was run from the final A7-LITE Vivado project with `scripts/03_run_regression.tcl`. Each test starts from clean generated simulator state, and the full-path assertion binds are enabled only for tops that elaborate the complete receive pipeline. All 12 runs passed: nine directed tests, the deterministic UVM smoke test and two constrained-random tests with fixed seeds.
 
 ## Verification layers
 
@@ -88,4 +88,4 @@ Repeating seed `20260730` through the generated Vivado project produced the same
 
 ## Evidence scope
 
-These results are behavioral simulation evidence. Post-route timing, utilisation and bitstream evidence is recorded separately in the [A7-LITE implementation results](implementation_results.md).
+These results are behavioral simulation evidence. Post-route timing, utilisation and bitstream evidence is recorded separately in the [A7-LITE implementation results](15_implementation_results.md).

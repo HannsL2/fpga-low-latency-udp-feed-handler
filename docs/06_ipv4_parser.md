@@ -49,7 +49,7 @@ Version and header length are checked with byte 14. Fragmentation is known after
 
 ## Directed verification
 
-`tb/basic/tb_ipv4_parser.sv` covers:
+`tb/basic/02_tb_ipv4_parser.sv` covers:
 
 - supported IPv4/UDP header extraction
 - source and destination address byte order

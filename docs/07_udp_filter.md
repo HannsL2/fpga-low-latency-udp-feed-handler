@@ -38,7 +38,7 @@ The ordering gives deterministic reporting when more than one destination field 
 
 ## Directed verification
 
-`tb/basic/tb_udp_filter.sv` covers:
+`tb/basic/03_tb_udp_filter.sv` covers:
 
 - source port, destination port, length and checksum extraction
 - an input-valid gap within the UDP header

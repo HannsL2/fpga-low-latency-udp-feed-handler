@@ -20,7 +20,7 @@ The checked-in A7-LITE implementation meets its 8 ns clock constraint on an Arti
 | Slice LUTs | 601 / 20,800 (2.89%) |
 | Slice registers | 588 / 41,600 (1.41%) |
 
-Full timing and utilisation evidence is recorded in the [A7-LITE implementation results](docs/implementation_results.md).
+Full timing and utilisation evidence is recorded in the [A7-LITE implementation results](docs/15_implementation_results.md).
 
 ## Design overview
 
@@ -97,7 +97,15 @@ Synthesis, place-and-route and bitstream generation target the board's Artix-7 `
 
 ### Simulation evidence
 
-Vivado XSim 2026.1 is the reference simulator. Checked-in Tcl captures the source files and simulation-top selection, while generated project and simulator data remain outside version control. The [XSim verification record](docs/xsim_verification.md) reports the executed tests, assertion scope and UVM scoreboard results.
+Vivado XSim 2026.1 is the reference simulator. Checked-in Tcl captures the source files and simulation-top selection, while generated project and simulator data remain outside version control. The [XSim verification record](docs/14_xsim_verification.md) reports the executed tests, assertion scope and UVM scoreboard results.
+
+## Reading order
+
+Start with the [numbered documentation](docs/README.md): specification and protocol, architecture and design decisions, receive-pipeline stages, verification, then implementation results.
+
+For source code, follow the [RTL reading order](rtl/README.md), then the [directed tests](tb/basic/README.md) and [UVM environment](tb/uvm/README.md). The [numbered scripts](scripts/README.md) cover project creation, simulation, regression, hardware build and programming.
+
+Filename numbers guide reading; module and class names are unchanged. If you have an existing generated Vivado project, recreate it using `scripts/01_create_vivado_project.tcl` (or the board build script) so its source paths use the numbered filenames.
 
 ## Repository structure
 
@@ -128,4 +136,4 @@ The final A7-LITE Vivado project passes a 12-run XSim regression: nine directed 
 
 The UVM 1.2 environment uses a conventional input agent containing a named sequencer, handshake-aware driver and passive input monitor. The output monitor, independent reference scoreboard and functional coverage remain directly under the environment. A deterministic smoke scenario exercises all supported message types, while a 40-packet constrained-random regression varies message fields, destination outcomes, sequence classifications, input gaps and output backpressure.
 
-See [the design specification](docs/project_specification.md), [architecture notes](docs/architecture.md), [implementation results](docs/implementation_results.md), [directed-verification notes](docs/directed_verification.md), [UVM verification notes](docs/uvm_verification.md), [protocol-assertion notes](docs/assertions.md), [Ethernet parser notes](docs/ethernet_parser.md), [IPv4 parser notes](docs/ipv4_parser.md), [UDP/filter notes](docs/udp_filter.md), [message-decoder notes](docs/market_message_decoder.md), [sequence-checker notes](docs/sequence_checker.md), [statistics notes](docs/statistics.md) and [protocol reference](docs/protocol.md) for detailed design information.
+See [the design specification](docs/01_project_specification.md), [architecture notes](docs/03_architecture.md), [implementation results](docs/15_implementation_results.md), [directed-verification notes](docs/11_directed_verification.md), [UVM verification notes](docs/12_uvm_verification.md), [protocol-assertion notes](docs/13_assertions.md), [Ethernet parser notes](docs/05_ethernet_parser.md), [IPv4 parser notes](docs/06_ipv4_parser.md), [UDP/filter notes](docs/07_udp_filter.md), [message-decoder notes](docs/08_market_message_decoder.md), [sequence-checker notes](docs/09_sequence_checker.md), [statistics notes](docs/10_statistics.md) and [protocol reference](docs/02_protocol.md) for detailed design information.

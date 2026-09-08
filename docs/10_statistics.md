@@ -25,4 +25,4 @@ The parser and decoder hierarchy produces at most one reject event for a packet.
 
 ## Verification
 
-`tb/basic/tb_statistics_counters.sv` checks primary totals, every dedicated rejection category, malformed traffic, valid messages and all sequence statistics. The integrated packet test checks that one accepted packet produces exactly one completed-packet count, one accepted count and one valid-message count, with no error counters. All directed XSim tests pass with no compile or elaboration warnings.
+`tb/basic/06_tb_statistics_counters.sv` checks primary totals, every dedicated rejection category, malformed traffic, valid messages and all sequence statistics. The integrated packet test checks that one accepted packet produces exactly one completed-packet count, one accepted count and one valid-message count, with no error counters. All directed XSim tests pass with no compile or elaboration warnings.
